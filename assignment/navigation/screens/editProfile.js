@@ -6,18 +6,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-class HomeScreen extends Component {
+class EditProfileScreen extends Component {
   constructor(props){
     super(props);
 
     this.state = {
       isLoading: true,
-      userData: [],
-      userId: '',
-      firstName: '',
-      lastName: '',
-      email: '',
-      friendCount: ''
+      listData: []
     }
   }
 
@@ -26,22 +21,18 @@ class HomeScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getUserData();
+    this.getData();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getUserData = async () => {
-    const token = await AsyncStorage.getItem('@session_token');
-    const id = await AsyncStorage.getItem('user_id')
-
-    return fetch("http://localhost:3333/api/1.0.0/user/" + id, {
-          method: 'get',
-          headers: {
-            'X-Authorization':  token,
-            'Content-Type': 'application/json'
+  getData = async () => {
+    const value = await AsyncStorage.getItem('@session_token');
+    return fetch("http://localhost:3333/api/1.0.0/search", {
+          'headers': {
+            'X-Authorization':  value
           }
         })
         .then((response) => {
@@ -56,12 +47,7 @@ class HomeScreen extends Component {
         .then((responseJson) => {
           this.setState({
             isLoading: false,
-            userData: responseJson,
-            userId: responseJson.user_id,
-            firstName: responseJson.first_name,
-            lastName: responseJson.last_name,
-            email: responseJson.email,
-            friendCount: responseJson.friend_count
+            listData: responseJson
           })
         })
         .catch((error) => {
@@ -93,22 +79,16 @@ class HomeScreen extends Component {
     }else{
       return (
         <View>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Home</Text>
-          <Text style={{fontSize:16, padding:5, margin:5}}>{this.state.firstName} {this.state.lastName} {"\n"}
-          {this.state.email} {"\n"}
-          {this.state.friendCount}</Text>
-
+          <Text style={{fontSize:18, padding:5, margin:5}}>Edit Profile Placeholder</Text>
           <Button
-            title="Logout"
-            color="darkblue"
-            onPress={() => this.props.navigation.navigate("Logout")}
+            title="Return Home"
+            onPress={() => this.props.navigation.navigate("Home")}
           />
         </View>
       );
-    }    
+    }
+    
   }
 }
 
-
-
-export default HomeScreen;
+export default EditProfileScreen;

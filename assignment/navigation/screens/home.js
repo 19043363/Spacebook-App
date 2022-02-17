@@ -12,12 +12,13 @@ class HomeScreen extends Component {
 
     this.state = {
       isLoading: true,
+      listData: [],
       userData: [],
-      userId: '',
-      firstName: '',
-      lastName: '',
+      user_id: '',
+      first_name: '',
+      last_name: '',
       email: '',
-      friendCount: ''
+      friend_count: ''
     }
   }
 
@@ -26,14 +27,14 @@ class HomeScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getUserData();
+    this.getData();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getUserData = async () => {
+  getData = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
 
@@ -56,12 +57,7 @@ class HomeScreen extends Component {
         .then((responseJson) => {
           this.setState({
             isLoading: false,
-            userData: responseJson,
-            userId: responseJson.user_id,
-            firstName: responseJson.first_name,
-            lastName: responseJson.last_name,
-            email: responseJson.email,
-            friendCount: responseJson.friend_count
+            listData: responseJson
           })
         })
         .catch((error) => {
@@ -94,10 +90,15 @@ class HomeScreen extends Component {
       return (
         <View>
           <Text style={{fontSize:18, padding:5, margin:5}}>Home</Text>
-          <Text style={{fontSize:16, padding:5, margin:5}}>{this.state.firstName} {this.state.lastName} {"\n"}
-          {this.state.email} {"\n"}
-          {this.state.friendCount}</Text>
-
+          <FlatList
+            data={this.state.listData}
+            renderItem={({item}) => (
+            <View>
+              <Text>{item.user_givenname} {item.user_familyname}</Text>
+            </View>
+            )}
+            keyExtractor={(item,index) => item.user_id.toString()}
+          />
           <Button
             title="Logout"
             color="darkblue"
