@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import {Button, View, Text, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createStackNavigator } from '@react-navigation/stack'
 
 
 class FriendRequestsScreen extends Component {
@@ -18,19 +19,22 @@ class FriendRequestsScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getData();
+    this.getFriends();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getData = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
-    return fetch("http://localhost:3333/api/1.0.0/search", {
-          'headers': {
-            'X-Authorization':  value
-          }
+  getFriends = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id');
+
+    return fetch("http://localhost:3333/api/1.0.0/friendrequests", {
+      method: 'get',
+      headers: {
+        'X-Authorization':  token,
+      }
         })
         .then((response) => {
             if(response.status === 200){
@@ -46,6 +50,7 @@ class FriendRequestsScreen extends Component {
             isLoading: false,
             listData: responseJson
           })
+          console.log(this.state.listData)
         })
         .catch((error) => {
             console.log(error);
@@ -53,13 +58,15 @@ class FriendRequestsScreen extends Component {
   }
 
   checkLoggedIn = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
-    if (value == null) {
+    const token = await AsyncStorage.getItem('@session_token');
+    if (token == null) {
         this.props.navigation.navigate('Login');
     }
   };
 
   render() {
+
+    const nav = this.props.navigation;
 
     if (this.state.isLoading){
       return (
@@ -76,7 +83,16 @@ class FriendRequestsScreen extends Component {
     }else{
       return (
         <View>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Friend Requests Placeholder</Text>
+          <Text style={{fontSize:18, padding:5, margin:5}}>Friends Requests</Text>
+          <FlatList
+                data={this.state.listData}
+                renderItem={({item}) => (
+                    <View>
+                      <Button title={item.first_name + " " + item.last_name}/>
+                    </View>
+                )}
+                keyExtractor={(item,index) => item.user_id.toString()}
+          />
         </View>
       );
     }

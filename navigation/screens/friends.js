@@ -18,19 +18,23 @@ class FriendsScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getData();
+    this.getFriends();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getData = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
-    return fetch("http://localhost:3333/api/1.0.0/search", {
-          'headers': {
-            'X-Authorization':  value
-          }
+  getFriends = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id');
+
+    return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/friends", {
+      method: 'get',
+      headers: {
+        'X-Authorization':  token,
+        'Content-Type': 'application/json'
+      }
         })
         .then((response) => {
             if(response.status === 200){
@@ -46,6 +50,7 @@ class FriendsScreen extends Component {
             isLoading: false,
             listData: responseJson
           })
+          console.log(this.state.listData)
         })
         .catch((error) => {
             console.log(error);
@@ -53,8 +58,8 @@ class FriendsScreen extends Component {
   }
 
   checkLoggedIn = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
-    if (value == null) {
+    const token = await AsyncStorage.getItem('@session_token');
+    if (token == null) {
         this.props.navigation.navigate('Login');
     }
   };
@@ -80,6 +85,15 @@ class FriendsScreen extends Component {
         <View>
           <Text style={{fontSize:18, padding:5, margin:5}}>Friends</Text>
           <Button title="Friend Profile" onPress={() => nav.navigate("Friend Profile")}/>
+          <FlatList
+                data={this.state.listData}
+                renderItem={({item}) => (
+                    <View>
+                      <Button title={item.user_givenname + " " + item.user_familyname}/>
+                    </View>
+                )}
+                keyExtractor={(item,index) => item.user_id.toString()}
+          />
         </View>
       );
     }

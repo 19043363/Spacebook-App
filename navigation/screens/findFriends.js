@@ -18,19 +18,23 @@ class FindFriendsScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getData();
+    this.getFriendSearch();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getData = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
+  getFriendSearch = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id');
+
     return fetch("http://localhost:3333/api/1.0.0/search", {
-          'headers': {
-            'X-Authorization':  value
-          }
+      method: 'get',
+      headers: {
+        'X-Authorization':  token,
+        'Content-Type': 'application/json'
+      }
         })
         .then((response) => {
             if(response.status === 200){
@@ -53,8 +57,8 @@ class FindFriendsScreen extends Component {
   }
 
   checkLoggedIn = async () => {
-    const value = await AsyncStorage.getItem('@session_token');
-    if (value == null) {
+    const token = await AsyncStorage.getItem('@session_token');
+    if (token == null) {
         this.props.navigation.navigate('Login');
     }
   };
@@ -79,11 +83,20 @@ class FindFriendsScreen extends Component {
           <Text style={{fontSize:18, padding:5, margin:5}}>Find Friends Placeholder</Text>
           <Button
           title="Friend Requests"
+          color="darkblue"
           onPress={() => this.props.navigation.navigate("Friend Requests")}/>
+          <FlatList
+                data={this.state.listData}
+                renderItem={({item}) => (
+                    <View>
+                      <Button title={item.user_givenname + " " + item.user_familyname}/>
+                    </View>
+                )}
+                keyExtractor={(item,index) => item.user_id.toString()}
+          />
         </View>
       );
     }
-    
   }
 }
 
