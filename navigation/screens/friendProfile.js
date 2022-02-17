@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import React, { Component } from 'react';
+import { Button, View, Text, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import FriendScreen from './friends';
 
 class FriendProfileScreen extends Component {
   constructor(props){
@@ -61,6 +62,8 @@ class FriendProfileScreen extends Component {
 
   render() {
 
+    const nav = this.props.navigation;
+
     if (this.state.isLoading){
       return (
         <View
@@ -76,7 +79,8 @@ class FriendProfileScreen extends Component {
     }else{
       return (
         <View>
-          <Text>Friend Profile Placeholder</Text>
+          <Text style={{fontSize:18, padding:5, margin:5}}>Friend Profile Placeholder</Text>
+          <Button title="Friends" onPress={() => nav.navigate("Friends")}/>
         </View>
       );
     }

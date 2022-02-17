@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import { Button, View, Text, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -79,14 +79,16 @@ class EditProfileScreen extends Component {
     }else{
       return (
         <View>
-          <Text>Edit Profile Placeholder</Text>
+          <Text style={{fontSize:18, padding:5, margin:5}}>Edit Profile Placeholder</Text>
+          <Button
+            title="Return Home"
+            onPress={() => this.props.navigation.navigate("Home")}
+          />
         </View>
       );
     }
     
   }
 }
-
-
 
 export default EditProfileScreen;

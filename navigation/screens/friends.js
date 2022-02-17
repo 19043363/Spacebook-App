@@ -3,8 +3,6 @@ import {Button, View, Text, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createStackNavigator } from '@react-navigation/stack'
 
-import FriendProfileScreen from './friendProfile';
-
 class FriendsScreen extends Component {
   constructor(props){
     super(props);
@@ -80,7 +78,7 @@ class FriendsScreen extends Component {
     }else{
       return (
         <View>
-          <Text>Friends Placeholder</Text>
+          <Text style={{fontSize:18, padding:5, margin:5}}>Friends</Text>
           <Button title="Friend Profile" onPress={() => nav.navigate("Friend Profile")}/>
         </View>
       );

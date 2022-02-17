@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, FlatList} from 'react-native';
+import { Button, View, Text, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -76,7 +76,10 @@ class FindFriendsScreen extends Component {
     }else{
       return (
         <View>
-          <Text>Find Friends Placeholder</Text>
+          <Text style={{fontSize:18, padding:5, margin:5}}>Find Friends Placeholder</Text>
+          <Button
+          title="Friend Requests"
+          onPress={() => this.props.navigation.navigate("Friend Requests")}/>
         </View>
       );
     }

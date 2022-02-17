@@ -21,6 +21,7 @@ import LogoutScreen from './navigation/screens/logout';
 import BottomTabNavigator from './navigation/bottomTabNavigator';
 import LoginStackNavigator from './navigation/loginStackNavigator';
 import HomeDrawerNavigator from './navigation/homeDrawerNavigator';
+import SettingsScreen from './navigation/screens/settings';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -35,7 +36,6 @@ class App extends Component{
                     headerShown: false
                   }}>
                     <Stack.Screen name="Home" component={BottomTabNavigator} />
-                    <Stack.Screen name="Edit Profile" component={EditProfileScreen} />
                     <Stack.Screen name="Login" component={LoginStackNavigator} />
                     <Stack.Screen name="Logout" component={LogoutScreen} />
                 </Stack.Navigator>

@@ -76,7 +76,7 @@ class FriendRequestsScreen extends Component {
     }else{
       return (
         <View>
-          <Text>Friend Request Placeholder</Text>
+          <Text style={{fontSize:18, padding:5, margin:5}}>Friend Requests Placeholder</Text>
         </View>
       );
     }
