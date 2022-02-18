@@ -19,14 +19,14 @@ class FriendRequestsScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getFriends();
+    this.getFriendRequests();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getFriends = async () => {
+  getFriendRequests = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id');
 
@@ -50,7 +50,66 @@ class FriendRequestsScreen extends Component {
             isLoading: false,
             listData: responseJson
           })
-          console.log(this.state.listData)
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+  }
+
+  postAcceptFriendRequest = async (user_id) => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id');
+
+    return fetch("http://localhost:3333/api/1.0.0/friendrequests/" + user_id, {
+      method: 'post',
+      headers: {
+        'X-Authorization':  token,
+        'Content-Type': 'application/json'
+      }
+        })
+        .then((response) => {
+            if(response.status === 200){
+                return response.json()
+            }else if(response.status === 401){
+              this.props.navigation.navigate("Login");
+            }else{
+                throw 'Something went wrong';
+            }
+        })
+        .then((responseJson) => {
+          this.setState({
+            isLoading: false,
+          })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+  }
+
+  deleteRejectFriendRequest = async (user_id) => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id');
+
+    return fetch("http://localhost:3333/api/1.0.0/friendrequests/" + user_id, {
+      method: 'delete',
+      headers: {
+        'X-Authorization':  token,
+        'Content-Type': 'application/json'
+      }
+        })
+        .then((response) => {
+            if(response.status === 200){
+                return response.json()
+            }else if(response.status === 401){
+              this.props.navigation.navigate("Login");
+            }else{
+                throw 'Something went wrong';
+            }
+        })
+        .then((responseJson) => {
+          this.setState({
+            isLoading: false,
+          })
         })
         .catch((error) => {
             console.log(error);
@@ -89,6 +148,12 @@ class FriendRequestsScreen extends Component {
                 renderItem={({item}) => (
                     <View>
                       <Button title={item.first_name + " " + item.last_name}/>
+                      <Button title={"Accept"}
+                      color="seagreen"
+                      onPress={() => this.postAcceptFriendRequest(item.user_id)}/>
+                      <Button title={"Reject"}
+                      color="firebrick"
+                      onPress={() => this.deleteRejectFriendRequest(item.user_id)}/>
                     </View>
                 )}
                 keyExtractor={(item,index) => item.user_id.toString()}

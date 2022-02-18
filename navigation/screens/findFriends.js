@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, View, Text, FlatList} from 'react-native';
+import { Button, View, StyleSheet, Text, TextInput, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -9,7 +9,9 @@ class FindFriendsScreen extends Component {
 
     this.state = {
       isLoading: true,
-      listData: []
+      peopleData: [],
+      friendData: [],
+      friendSearch: '', 
     }
   }
 
@@ -18,14 +20,14 @@ class FindFriendsScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getFriendSearch();
+    this.getPeopleList();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getFriendSearch = async () => {
+  getPeopleList = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id');
 
@@ -48,7 +50,70 @@ class FindFriendsScreen extends Component {
         .then((responseJson) => {
           this.setState({
             isLoading: false,
-            listData: responseJson
+            peopleData: responseJson
+          })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+  }
+
+  getFindFriendsSearch = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id');
+
+    return fetch("http://localhost:3333/api/1.0.0/search?q=" + this.state.friendSearch, {
+      method: 'get',
+      headers: {
+        'X-Authorization':  token,
+        'Content-Type': 'application/json'
+      }
+        })
+        .then((response) => {
+            if(response.status === 200){
+                return response.json()
+            }else if(response.status === 401){
+              this.props.navigation.navigate("Login");
+            }else{
+              throw 'Something went wrong';
+            }
+        })
+        .then((responseJson) => {
+          this.setState({
+            isLoading: false,
+            peopleData: responseJson
+          })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+  }
+
+  postAddFriend = async (user_id) => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id');
+
+    return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/friends", {
+      method: 'post',
+      headers: {
+        'X-Authorization':  token,
+        'Content-Type': 'application/json'
+      }
+        })
+        .then((response) => {
+            if(response.status === 200){
+                return response.json()
+            }else if(response.status === 401){
+              this.props.navigation.navigate("Login");
+            }else if(response.status === 403){
+              throw 'User is already added as a friend';
+            }else{
+                throw 'Something went wrong';
+            }
+        })
+        .then((responseJson) => {
+          this.setState({
+            isLoading: false,
           })
         })
         .catch((error) => {
@@ -81,15 +146,28 @@ class FindFriendsScreen extends Component {
       return (
         <View>
           <Text style={{fontSize:18, padding:5, margin:5}}>Find Friends Placeholder</Text>
+          <TextInput style={styles.regularText}
+            placeholder="Search for Friends"
+            onChangeText={(friendSearch) => this.setState({friendSearch})}
+            value={this.state.friendSearch}
+          />
+
+          <Button
+          title="Search"
+          color="darkblue"
+          onPress={() => this.getFindFriendsSearch()}/>
+
           <Button
           title="Friend Requests"
           color="darkblue"
           onPress={() => this.props.navigation.navigate("Friend Requests")}/>
+
           <FlatList
-                data={this.state.listData}
+                data={this.state.peopleData}
                 renderItem={({item}) => (
                     <View>
-                      <Button title={item.user_givenname + " " + item.user_familyname}/>
+                      <Button title={item.user_givenname + " " + item.user_familyname + " +"}
+                      onPress={() => this.postAddFriend(item.user_id)}/>
                     </View>
                 )}
                 keyExtractor={(item,index) => item.user_id.toString()}
@@ -100,6 +178,12 @@ class FindFriendsScreen extends Component {
   }
 }
 
-
-
 export default FindFriendsScreen;
+
+const styles = StyleSheet.create({
+  regularText: {
+    fontSize:16, 
+    padding:5, 
+    margin:5
+  },
+});

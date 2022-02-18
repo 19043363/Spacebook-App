@@ -9,7 +9,8 @@ class FriendsScreen extends Component {
 
     this.state = {
       isLoading: true,
-      listData: []
+      listData: [],
+      friendId: ''
     }
   }
 
@@ -41,6 +42,8 @@ class FriendsScreen extends Component {
                 return response.json()
             }else if(response.status === 401){
               this.props.navigation.navigate("Login");
+            }else if(response.status === 403){
+              throw 'Can only view the friends of yourself or your friends';
             }else{
                 throw 'Something went wrong';
             }
@@ -50,7 +53,6 @@ class FriendsScreen extends Component {
             isLoading: false,
             listData: responseJson
           })
-          console.log(this.state.listData)
         })
         .catch((error) => {
             console.log(error);
@@ -84,12 +86,14 @@ class FriendsScreen extends Component {
       return (
         <View>
           <Text style={{fontSize:18, padding:5, margin:5}}>Friends</Text>
-          <Button title="Friend Profile" onPress={() => nav.navigate("Friend Profile")}/>
           <FlatList
                 data={this.state.listData}
                 renderItem={({item}) => (
                     <View>
-                      <Button title={item.user_givenname + " " + item.user_familyname}/>
+                      <Button title={item.user_givenname + " " + item.user_familyname}
+                      onPress={() => nav.navigate("Friend Profile", {
+                        user_id: item.user_id
+                      })}/>
                     </View>
                 )}
                 keyExtractor={(item,index) => item.user_id.toString()}
