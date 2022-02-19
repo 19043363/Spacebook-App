@@ -74,7 +74,7 @@ class EditProfileScreen extends Component {
     })
   }
 
-  updateUserData = async () => {
+  patchUpdateUserData = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
 
@@ -169,7 +169,7 @@ class EditProfileScreen extends Component {
 
           <Button
             title="Update"
-            onPress={() => this.updateUserData()}
+            onPress={() => this.patchUpdateUserData()}
           />
 
           <Button
