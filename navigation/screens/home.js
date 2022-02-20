@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import { Button, View, StyleSheet, Text, TextInput, FlatList } from 'react-native';
+import { Button, View, StyleSheet, Text, TextInput, FlatList, Pressable, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 class HomeScreen extends Component {
   constructor(props){
@@ -18,7 +19,6 @@ class HomeScreen extends Component {
       lastName: '',
       email: '',
       friendCount: '',
-      origText:'',
       text: '',
       postData: [],
     }
@@ -179,6 +179,7 @@ class HomeScreen extends Component {
   };
 
   render() {
+    const nav = this.props.navigation;
 
     if (this.state.isLoading){
       return (
@@ -194,7 +195,7 @@ class HomeScreen extends Component {
       );
     }else{
       return (
-        <View>
+        <ScrollView>
           <Text style={{fontSize:18, padding:5, margin:5}}>Home</Text>
           <Text style={{fontSize:16, padding:5, margin:5}}>{this.state.firstName} {this.state.lastName} {"\n"}
           {this.state.email} {"\n"}
@@ -230,7 +231,11 @@ class HomeScreen extends Component {
                       onPress={() => this.deleteRemovePost(item.post_id)}/>
 
                       <Button title={"Update Post"}
-                      color="orange"/>
+                      color="orange"
+                      onPress={() => nav.navigate("Edit Post", 
+                      {post_id: item.post_id})
+                      }
+                      />
 
                       <Text style={styles.regularText}>{item.author.first_name} {item.author.last_name}{"\n"}
                       {item.numLikes} Likes </Text>
@@ -239,7 +244,7 @@ class HomeScreen extends Component {
                 keyExtractor={(item,index) => item.post_id.toString()}
           />
 
-        </View>
+        </ScrollView>
       );
     }    
   }

@@ -91,7 +91,7 @@ class FriendsScreen extends Component {
                 renderItem={({item}) => (
                     <View>
                       <Button title={item.user_givenname + " " + item.user_familyname}
-                      onPress={() => nav.navigate("Friend Profile", {
+                        onPress={() => nav.navigate("Friend Profile", {
                         user_id: item.user_id
                       })}/>
                     </View>

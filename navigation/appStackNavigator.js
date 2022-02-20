@@ -11,15 +11,16 @@ import LogoutScreen from './screens/logout';
 import BottomTabNavigator from './bottomTabNavigator';
 
 const Drawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 class HomeStackNavigator extends Component{
     render(){
         return (
-            <Drawer.Navigator initialRouteName="Home">
-                <Drawer.Screen name="Home" component={BottomTabNavigator} />
-                <Drawer.Screen name="Edit Profile" component={EditProfileScreen} />
-                <Drawer.Screen name="Logout" component={LogoutScreen} />
-            </Drawer.Navigator>
+            <Stack.Navigator initialRouteName="Home">
+                <Stack.Screen name="Home" component={BottomTabNavigator} />
+                <Stack.Screen name="Edit Profile" component={EditProfileScreen} />
+                <Stack.Screen name="Logout" component={LogoutScreen} />
+            </Stack.Navigator>
         );
     }
 }

@@ -20,7 +20,7 @@ import FriendProfileScreen from './navigation/screens/friendProfile';
 import LogoutScreen from './navigation/screens/logout';
 import BottomTabNavigator from './navigation/bottomTabNavigator';
 import LoginStackNavigator from './navigation/loginStackNavigator';
-import HomeDrawerNavigator from './navigation/homeDrawerNavigator';
+import AppStackNavigator from './navigation/appStackNavigator';
 import SettingsScreen from './navigation/screens/settings';
 
 const Drawer = createDrawerNavigator();

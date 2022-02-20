@@ -13,6 +13,7 @@ import FriendStackNavigator from './friendStackNavigator';
 import SettingsScreen from './screens/settings';
 import FindFriendStackNavigator from './findFriendStackNavigator';
 import SettingsStackNavigator from './settingsStackNavigator';
+import HomeStackNavigator from './homeStackNavigator';
 
 const Tab = createBottomTabNavigator()
 
@@ -22,7 +23,7 @@ class App extends Component{
             <Tab.Navigator screenOptions={{
                 headerShown: false,
               }}>
-                <Tab.Screen name="Home" component={HomeScreen} />
+                <Tab.Screen name="Home" component={HomeStackNavigator} />
                 <Tab.Screen name="Friends" component={FriendStackNavigator} />
                 <Tab.Screen name="Find Friends" component={FindFriendStackNavigator} />
                 <Tab.Screen name="Settings" component={SettingsStackNavigator} />
