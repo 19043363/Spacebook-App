@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Button, View, Text, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createStackNavigator } from '@react-navigation/stack'
 
+import GlobalStyles from '../../styles/globalStyles';
 
 class FriendRequestsScreen extends Component {
   constructor(props){
@@ -56,7 +56,7 @@ class FriendRequestsScreen extends Component {
         })
   }
 
-  postAcceptFriendRequest = async (user_id) => {
+  acceptFriendRequest = async (user_id) => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id');
 
@@ -86,7 +86,7 @@ class FriendRequestsScreen extends Component {
         })
   }
 
-  deleteRejectFriendRequest = async (user_id) => {
+  rejectFriendRequest = async (user_id) => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id');
 
@@ -130,19 +130,14 @@ class FriendRequestsScreen extends Component {
     if (this.state.isLoading){
       return (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={GlobalStyles.loading}>
           <Text>Loading..</Text>
         </View>
       );
     }else{
       return (
         <View>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Friends Requests</Text>
+          <Text style={GlobalStyles.headerText}>Friends Requests</Text>
           <FlatList
                 data={this.state.listData}
                 renderItem={({item}) => (
@@ -150,10 +145,10 @@ class FriendRequestsScreen extends Component {
                       <Button title={item.first_name + " " + item.last_name}/>
                       <Button title={"Accept"}
                       color="seagreen"
-                      onPress={() => this.postAcceptFriendRequest(item.user_id)}/>
+                      onPress={() => this.acceptFriendRequest(item.user_id)}/>
                       <Button title={"Reject"}
                       color="firebrick"
-                      onPress={() => this.deleteRejectFriendRequest(item.user_id)}/>
+                      onPress={() => this.rejectFriendRequest(item.user_id)}/>
                     </View>
                 )}
                 keyExtractor={(item,index) => item.user_id.toString()}

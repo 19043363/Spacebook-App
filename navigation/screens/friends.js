@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Button, View, Text, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createStackNavigator } from '@react-navigation/stack'
+
+import GlobalStyles from '../../styles/globalStyles';
 
 class FriendsScreen extends Component {
   constructor(props){
@@ -73,19 +74,14 @@ class FriendsScreen extends Component {
     if (this.state.isLoading){
       return (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={GlobalStyles.loading}>
           <Text>Loading..</Text>
         </View>
       );
     }else{
       return (
         <View>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Friends</Text>
+          <Text style={GlobalStyles.headerText}>Friends</Text>
           <FlatList
                 data={this.state.listData}
                 renderItem={({item}) => (

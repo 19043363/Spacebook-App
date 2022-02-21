@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Button, View, Text, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import GlobalStyles from '../../styles/globalStyles';
 
 class FriendRequestsScreen extends Component {
   constructor(props){
@@ -64,19 +65,14 @@ class FriendRequestsScreen extends Component {
     if (this.state.isLoading){
       return (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={GlobalStyles.loading}>
           <Text>Loading..</Text>
         </View>
       );
     }else{
       return (
         <View>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Friend Requests Placeholder</Text>
+          <Text style={GlobalStyles.headerText}>Settings Placeholder</Text>
           <Button
             title="Edit Profile"
             onPress={() => this.props.navigation.navigate("Edit Profile")}
@@ -84,11 +80,8 @@ class FriendRequestsScreen extends Component {
         </View>
         
       );
-    }
-    
+    }   
   }
 }
-
-
 
 export default FriendRequestsScreen;

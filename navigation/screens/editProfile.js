@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import { Button, View, StyleSheet, Text, TextInput, FlatList } from 'react-native';
+import { Button, View, Text, TextInput, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import GlobalStyles from '../../styles/globalStyles';
 
 class EditProfileScreen extends Component {
   constructor(props){
@@ -74,7 +72,7 @@ class EditProfileScreen extends Component {
     })
   }
 
-  patchUpdateUserData = async () => {
+  updateUserData = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
 
@@ -124,43 +122,38 @@ class EditProfileScreen extends Component {
     if (this.state.isLoading){
       return (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={GlobalStyles.loading}>
           <Text>Loading..</Text>
         </View>
       );
     }else{
       return (
         <View>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Edit Profile Placeholder</Text>
+          <Text style={GlobalStyles.headerText}>Edit Profile Placeholder</Text>
           
-          <Text style={styles.regularText}>First Name</Text>
-          <TextInput style={styles.regularText}
+          <Text style={GlobalStyles.regularText}>First Name</Text>
+          <TextInput style={GlobalStyles.regularText}
             placeholder={this.state.origFirstName}
             onChangeText={(firstName) => this.setState({firstName})}
             value={this.state.firstName}
           />
 
-          <Text style={styles.regularText}>Last Name</Text>
-          <TextInput style={styles.regularText}
+          <Text style={GlobalStyles.regularText}>Last Name</Text>
+          <TextInput style={GlobalStyles.regularText}
             placeholder={this.state.origLastName}
             onChangeText={(lastName) => this.setState({lastName})}
             value={this.state.lastName}
           />
 
-          <Text style={styles.regularText}>Email</Text>
-          <TextInput style={styles.regularText}
+          <Text style={GlobalStyles.regularText}>Email</Text>
+          <TextInput style={GlobalStyles.regularText}
             placeholder={this.state.origEmail}
             onChangeText={(email) => this.setState({email})}
             value={this.state.email}
           />
 
-          <Text style={styles.regularText}>Password</Text>
-          <TextInput style={styles.regularText}
+          <Text style={GlobalStyles.regularText}>Password</Text>
+          <TextInput style={GlobalStyles.regularText}
             placeholder={'New Password'}
             secureTextEntry
             onChangeText={(password) => this.setState({password})}
@@ -169,7 +162,7 @@ class EditProfileScreen extends Component {
 
           <Button
             title="Update"
-            onPress={() => this.patchUpdateUserData()}
+            onPress={() => this.updateUserData()}
           />
 
           <Button
@@ -184,11 +177,3 @@ class EditProfileScreen extends Component {
 }
 
 export default EditProfileScreen;
-
-const styles = StyleSheet.create({
-  regularText: {
-    fontSize:16, 
-    padding:5, 
-    margin:5
-  },
-});

@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
-import { Button, View, StyleSheet, Text, TextInput, FlatList } from 'react-native';
+import { Button, View, Text, TextInput, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import GlobalStyles from '../../styles/globalStyles';
 
 class EditProfileScreen extends Component {
   constructor(props){
@@ -28,7 +26,7 @@ class EditProfileScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getPodyData(post_id);
+    this.getPostData(post_id);
   }
 
   componentWillUnmount() {
@@ -67,7 +65,7 @@ class EditProfileScreen extends Component {
     })
   }
 
-  patchUpdatePost = async (post_id) => {
+  updatePost = async (post_id) => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
 
@@ -108,20 +106,15 @@ class EditProfileScreen extends Component {
     if (this.state.isLoading){
       return (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={GlobalStyles.loading}>
           <Text>Loading..</Text>
         </View>
       );
     }else{
       return (
         <View>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Edit Post Placeholder</Text>
-          <TextInput style={styles.postTextInput}
+          <Text style={GlobalStyles.headerText}>Edit Post Placeholder</Text>
+          <TextInput style={GlobalStyles.postTextInput}
             placeholder={"Edit your Post"}
             multiline={true}
             onChangeText={(text) => this.setState({text})}
@@ -130,7 +123,7 @@ class EditProfileScreen extends Component {
 
           <Button
             title="Update"
-            onPress={() => this.patchUpdatePost(post_id)}
+            onPress={() => this.updatePost(post_id)}
           />
 
           <Button
@@ -145,27 +138,3 @@ class EditProfileScreen extends Component {
 }
 
 export default EditProfileScreen;
-
-const styles = StyleSheet.create({
-  regularText: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-  },
-
-  postTextInput: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-    height: 60
-  },
-
-  postText: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 2
-  },
-});

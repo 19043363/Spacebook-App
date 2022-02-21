@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import { Button, View, StyleSheet, Text, TextInput, FlatList} from 'react-native';
+import { Button, View, Text, TextInput, FlatList} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import GlobalStyles from '../../styles/globalStyles';
 
 class FindFriendsScreen extends Component {
   constructor(props){
@@ -9,7 +10,7 @@ class FindFriendsScreen extends Component {
 
     this.state = {
       isLoading: true,
-      peopleData: [],
+      friendData: [],
       friendData: [],
       friendSearch: '', 
     }
@@ -20,14 +21,14 @@ class FindFriendsScreen extends Component {
       this.checkLoggedIn();
     });
   
-    this.getPeopleList();
+    this.getSearchList();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getPeopleList = async () => {
+  getSearchList = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id');
 
@@ -50,7 +51,7 @@ class FindFriendsScreen extends Component {
         .then((responseJson) => {
           this.setState({
             isLoading: false,
-            peopleData: responseJson
+            friendData: responseJson
           })
         })
         .catch((error) => {
@@ -58,7 +59,7 @@ class FindFriendsScreen extends Component {
         })
   }
 
-  getFindFriendsSearch = async () => {
+  getUserFriendsSearch = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id');
 
@@ -81,7 +82,7 @@ class FindFriendsScreen extends Component {
         .then((responseJson) => {
           this.setState({
             isLoading: false,
-            peopleData: responseJson
+            friendData: responseJson
           })
         })
         .catch((error) => {
@@ -133,20 +134,15 @@ class FindFriendsScreen extends Component {
     if (this.state.isLoading){
       return (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={GlobalStyles.loading}>
           <Text>Loading..</Text>
         </View>
       );
     }else{
       return (
         <View>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Find Friends Placeholder</Text>
-          <TextInput style={styles.regularText}
+          <Text style={GlobalStyles.headerText}>Find Friends Placeholder</Text>
+          <TextInput style={GlobalStyles.regularText}
             placeholder="Search for Friends"
             onChangeText={(friendSearch) => this.setState({friendSearch})}
             value={this.state.friendSearch}
@@ -155,7 +151,7 @@ class FindFriendsScreen extends Component {
           <Button
           title="Search"
           color="darkblue"
-          onPress={() => this.getFindFriendsSearch()}/>
+          onPress={() => this.getUserFriendsSearch()}/>
 
           <Button
           title="Friend Requests"
@@ -163,7 +159,7 @@ class FindFriendsScreen extends Component {
           onPress={() => this.props.navigation.navigate("Friend Requests")}/>
 
           <FlatList
-                data={this.state.peopleData}
+                data={this.state.friendData}
                 renderItem={({item}) => (
                     <View>
                       <Button title={item.user_givenname + " " + item.user_familyname + " +"}
@@ -179,11 +175,3 @@ class FindFriendsScreen extends Component {
 }
 
 export default FindFriendsScreen;
-
-const styles = StyleSheet.create({
-  regularText: {
-    fontSize:16, 
-    padding:5, 
-    margin:5
-  },
-});

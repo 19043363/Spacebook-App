@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Text, ScrollView, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import GlobalStyles from '../../styles/globalStyles';
+
 class LogoutScreen extends Component{
     constructor(props){
         super(props);
@@ -57,8 +59,8 @@ class LogoutScreen extends Component{
     render(){
         return (
             <ScrollView>
-                <Text style={{fontSize:18, fontWeight:'bold', padding:5, margin:5}}>If you leave me now, you'll take away the biggest part of me...</Text>
-                <Text style={{fontSize:18, fontWeight:'bold', padding:5, margin:5}}>...Oooooohh, please don't go!</Text>
+                <Text style={GlobalStyles.headerText}>If you leave me now, you'll take away the biggest part of me...</Text>
+                <Text style={GlobalStyles.headerText}>...Oooooohh, please don't go!</Text>
                 <Button
                     title="I'm outta here"
                     onPress={() => this.logout()}

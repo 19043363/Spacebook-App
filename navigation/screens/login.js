@@ -3,6 +3,8 @@ import { Button, Text } from 'react-native';
 import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import GlobalStyles from '../../styles/globalStyles';
+
 class LoginScreen extends Component{
     constructor(props){
         super(props);
@@ -34,7 +36,6 @@ class LoginScreen extends Component{
             }
         })
         .then(async (responseJson) => {
-                console.log(responseJson);
                 await AsyncStorage.setItem('@session_token', responseJson.token);
                 await AsyncStorage.setItem('user_id', responseJson.id);
                 this.props.navigation.navigate("Home");
@@ -47,19 +48,19 @@ class LoginScreen extends Component{
     render(){
         return (
             <ScrollView>
-                <Text style={{fontSize:18, fontWeight:'bold', padding:5, margin:5}}>Login</Text>
+                <Text style={GlobalStyles.headerText}>Login</Text>
                 <TextInput
                     placeholder="Enter your email..."
                     onChangeText={(email) => this.setState({email})}
                     value={this.state.email}
-                    style={{padding:5, borderWidth:1, margin:5}}
+                    style={GlobalStyles.userDataTextBox}
                 />
                 <TextInput
                     placeholder="Enter your password..."
                     onChangeText={(password) => this.setState({password})}
                     value={this.state.password}
                     secureTextEntry
-                    style={{padding:5, borderWidth:1, margin:5}}
+                    style={GlobalStyles.userDataTextBox}
                 />
                 <Button
                     title="Login"

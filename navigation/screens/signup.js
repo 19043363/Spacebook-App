@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Button, ScrollView, TextInput, Text } from 'react-native';
 
+import GlobalStyles from '../../styles/globalStyles';
+
 class SignupScreen extends Component{
     constructor(props){
         super(props);
@@ -44,32 +46,32 @@ class SignupScreen extends Component{
     render(){
         return (
             <ScrollView>
-                <Text style={{fontSize:18, fontWeight:'bold', padding:5, margin:5}}>Sign up</Text>
-                <Text style={{fontSize:16, fontWeight:'bold', padding:5, margin:5}}>Welcome to Spacebook!</Text>
+                <Text style={GlobalStyles.headerText}>Sign up</Text>
+                <Text style={GlobalStyles.headerText}>Welcome to Spacebook!</Text>
                 <TextInput
                     placeholder="Enter your first name..."
                     onChangeText={(first_name) => this.setState({first_name})}
                     value={this.state.first_name}
-                    style={{padding:5, borderWidth:1, margin:5}}
+                    style={GlobalStyles.userDataTextBox}
                 />
                 <TextInput
                     placeholder="Enter your last name..."
                     onChangeText={(last_name) => this.setState({last_name})}
                     value={this.state.last_name}
-                    style={{padding:5, borderWidth:1, margin:5}}
+                    style={GlobalStyles.userDataTextBox}
                 />
                 <TextInput
                     placeholder="Enter your email..."
                     onChangeText={(email) => this.setState({email})}
                     value={this.state.email}
-                    style={{padding:5, borderWidth:1, margin:5}}
+                    style={GlobalStyles.userDataTextBox}
                 />
                 <TextInput
                     placeholder="Enter your password..."
                     onChangeText={(password) => this.setState({password})}
                     value={this.state.password}
                     secureTextEntry
-                    style={{padding:5, borderWidth:1, margin:5}}
+                    style={GlobalStyles.userDataTextBox}
                 />
                 <Button
                     title="Create an account"

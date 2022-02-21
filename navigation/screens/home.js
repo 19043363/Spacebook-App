@@ -1,11 +1,9 @@
 import React, {Component} from 'react';
-import { Button, View, StyleSheet, Text, TextInput, FlatList, Pressable, ScrollView } from 'react-native';
+import { Button, View, Text, TextInput, FlatList, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+
+
+import GlobalStyles from '../../styles/globalStyles';
 
 class HomeScreen extends Component {
   constructor(props){
@@ -30,7 +28,7 @@ class HomeScreen extends Component {
     });
   
     this.getUserData();
-    this.getShowPost();
+    this.getPostData();
   }
 
   componentWillUnmount() {
@@ -73,7 +71,7 @@ class HomeScreen extends Component {
         })
   }
 
-  postAddPost = async () => {
+  addPost = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
 
@@ -108,7 +106,7 @@ class HomeScreen extends Component {
         })
   }
 
-  getShowPost = async () => {
+  getPostData = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
 
@@ -139,7 +137,7 @@ class HomeScreen extends Component {
         })
   }
 
-  deleteRemovePost = async (post_id) => {
+  removePost = async (post_id) => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
 
@@ -184,12 +182,7 @@ class HomeScreen extends Component {
     if (this.state.isLoading){
       return (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={GlobalStyles.loading}>
           <Text>Loading..</Text>
         </View>
       );
@@ -197,8 +190,8 @@ class HomeScreen extends Component {
       return (
         <ScrollView
         horizontal={false}>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Home</Text>
-          <Text style={{fontSize:16, padding:5, margin:5}}>{this.state.firstName} {this.state.lastName} {"\n"}
+          <Text style={GlobalStyles.headerText}>Home</Text>
+          <Text style={GlobalStyles.regularText}>{this.state.firstName} {this.state.lastName} {"\n"}
           {this.state.email} {"\n"}
           Friends: {this.state.friendCount}</Text>
 
@@ -211,7 +204,7 @@ class HomeScreen extends Component {
             onPress={() => this.props.navigation.navigate("Logout")}
           />
 
-          <TextInput style={styles.postTextInput}
+          <TextInput style={GlobalStyles.postTextInput}
             placeholder="What's on your mind today?"
             multiline={true}
             onChangeText={(text) => this.setState({text})}
@@ -221,18 +214,18 @@ class HomeScreen extends Component {
           <Button
             title="Post"
             color="darkblue"
-            onPress={() => this.postAddPost()}
+            onPress={() => this.addPost()}
           />
 
           <FlatList
                 data={this.state.postData}
                 renderItem={({item}) => (
                     <View>
-                      <Text style={styles.postText}>{item.text} </Text> 
+                      <Text style={GlobalStyles.postText}>{item.text} </Text> 
 
                       <Button title={"Delete Post"}
                       color="firebrick"
-                      onPress={() => this.deleteRemovePost(item.post_id)}/>
+                      onPress={() => this.removePost(item.post_id)}/>
 
                       <Button title={"Update Post"}
                       color="orange"
@@ -241,7 +234,7 @@ class HomeScreen extends Component {
                       }
                       />
 
-                      <Text style={styles.regularText}>{item.author.first_name} {item.author.last_name}{"\n"}
+                      <Text style={GlobalStyles.regularText}>{item.author.first_name} {item.author.last_name}{"\n"}
                       {item.numLikes} Likes </Text>
                     </View>
                 )}
@@ -257,27 +250,3 @@ class HomeScreen extends Component {
 
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  regularText: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-  },
-
-  postTextInput: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-    height: 60
-  },
-
-  postText: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 2
-  },
-});

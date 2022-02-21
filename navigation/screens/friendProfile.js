@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Button, View, ScrollView, StyleSheet, Text, TextInput, FlatList } from 'react-native';
+import { Button, View, ScrollView, Text, TextInput, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import GlobalStyles from '../../styles/globalStyles';
 
 class FriendProfileScreen extends Component{
   constructor(props){
@@ -19,7 +21,7 @@ class FriendProfileScreen extends Component{
     });
   
     this.getFriendData();
-    this.getFriendPost();
+    this.getFriendPostData();
   }
 
   componentWillUnmount() {
@@ -63,7 +65,7 @@ class FriendProfileScreen extends Component{
         })
   }
 
-  getFriendPost = async () => {
+  getFriendPostData = async () => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
     const { user_id } = this.props.route.params
@@ -95,7 +97,7 @@ class FriendProfileScreen extends Component{
         })
   }
 
-  postLikeFriendPost = async (post_id) => {
+  likeFriendPost = async (post_id) => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
     const { user_id } = this.props.route.params
@@ -128,7 +130,7 @@ class FriendProfileScreen extends Component{
         })
   }
 
-  deleteLikeFriendPost = async (post_id) => {
+  removeLikeFromFriendPost = async (post_id) => {
     const token = await AsyncStorage.getItem('@session_token');
     const id = await AsyncStorage.getItem('user_id')
     const { user_id } = this.props.route.params
@@ -212,24 +214,19 @@ class FriendProfileScreen extends Component{
     if (this.state.isLoading){
       return (
         <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+          style={GlobalStyles.loading}>
           <Text>Loading..</Text>
         </View>
       );
     }else{
       return (
         <ScrollView>
-          <Text style={{fontSize:18, padding:5, margin:5}}>Friend Profile Placeholder</Text>
-          <Text style={{fontSize:16, padding:5, margin:5}}>{this.state.firstName} {this.state.lastName} {"\n"}
+          <Text style={GlobalStyles.headerText}>Friend Profile Placeholder</Text>
+          <Text style={GlobalStyles.regularText}>{this.state.firstName} {this.state.lastName} {"\n"}
           {this.state.email} {"\n"}
           Friends: {this.state.friendCount}</Text>
 
-          <TextInput style={styles.postTextInput}
+          <TextInput style={GlobalStyles.postTextInput}
             placeholder="Post on your friend's wall!"
             multiline={true}
             onChangeText={(text) => this.setState({text})}
@@ -246,16 +243,16 @@ class FriendProfileScreen extends Component{
                 data={this.state.postData}
                 renderItem={({item}) => (
                     <View>
-                      <Text style={styles.postText}>{item.text} </Text> 
+                      <Text style={GlobalStyles.postText}>{item.text} </Text> 
                       <Button title={"Like"}
                       color="pink"
-                      onPress={() => this.postLikeFriendPost(item.post_id)}
+                      onPress={() => this.likeFriendPost(item.post_id)}
                       />
                       <Button title={"Remove Like"}
                       color="firebrick"
-                      onPress={() => this.deleteLikeFriendPost(item.post_id)}
+                      onPress={() => this.removeLikeFromFriendPost(item.post_id)}
                       />
-                      <Text style={styles.regularText}>{item.author.first_name} {item.author.last_name}{"\n"}
+                      <Text style={GlobalStyles.regularText}>{item.author.first_name} {item.author.last_name}{"\n"}
                       {item.numLikes} Likes </Text>
                     </View>
                 )}
@@ -270,27 +267,3 @@ class FriendProfileScreen extends Component{
 }
 
 export default FriendProfileScreen;
-
-const styles = StyleSheet.create({
-  regularText: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-  },
-
-  postTextInput: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-    height: 60
-  },
-
-  postText: {
-    fontSize:16, 
-    padding:5, 
-    margin:5,
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 2
-  },
-});
