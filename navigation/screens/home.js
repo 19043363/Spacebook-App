@@ -195,11 +195,15 @@ class HomeScreen extends Component {
       );
     }else{
       return (
-        <ScrollView>
+        <ScrollView
+        horizontal={false}>
           <Text style={{fontSize:18, padding:5, margin:5}}>Home</Text>
           <Text style={{fontSize:16, padding:5, margin:5}}>{this.state.firstName} {this.state.lastName} {"\n"}
           {this.state.email} {"\n"}
-          {this.state.friendCount}</Text>
+          Friends: {this.state.friendCount}</Text>
+
+          <Button title="Friends"
+          onPress={() => nav.navigate("Friends")}/>
 
           <Button
             title="Logout"

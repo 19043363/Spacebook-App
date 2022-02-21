@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, View, StyleSheet, Text, FlatList } from 'react-native';
+import { Button, View, ScrollView, StyleSheet, Text, TextInput, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class FriendProfileScreen extends Component{
@@ -159,6 +159,42 @@ class FriendProfileScreen extends Component{
         })
   }
 
+  postAddPost = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id')
+    const { user_id } = this.props.route.params
+
+    let to_send = {
+      text: this.state.text
+    }
+
+    return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post", {
+          method: 'post',
+          headers: {
+            'X-Authorization':  token,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(to_send)
+        })
+        .then((response) => {
+            if(response.status === 200){
+                return response.json()
+            }else if(response.status === 401){
+              this.props.navigation.navigate("Login");
+            }else{
+                throw 'Something went wrong';
+            }
+        })
+        .then((responseJson) => {
+          this.setState({
+            isLoading: false
+          })
+        })
+        .catch((error) => {
+            console.log(error);
+        })
+  }
+
 
   checkLoggedIn = async () => {
     const value = await AsyncStorage.getItem('@session_token');
@@ -187,19 +223,37 @@ class FriendProfileScreen extends Component{
       );
     }else{
       return (
-        <View>
+        <ScrollView>
           <Text style={{fontSize:18, padding:5, margin:5}}>Friend Profile Placeholder</Text>
           <Text style={{fontSize:16, padding:5, margin:5}}>{this.state.firstName} {this.state.lastName} {"\n"}
           {this.state.email} {"\n"}
-          {this.state.friendCount}</Text>
+          Friends: {this.state.friendCount}</Text>
+
+          <TextInput style={styles.postTextInput}
+            placeholder="Post on your friend's wall!"
+            multiline={true}
+            onChangeText={(text) => this.setState({text})}
+            value={this.state.text}
+          />
+
+          <Button
+            title="Post"
+            color="darkblue"
+            onPress={() => this.postAddPost()}
+          />
+
           <FlatList
                 data={this.state.postData}
                 renderItem={({item}) => (
                     <View>
                       <Text style={styles.postText}>{item.text} </Text> 
-                      <Button title={"Like Post"}
+                      <Button title={"Like"}
                       color="pink"
                       onPress={() => this.postLikeFriendPost(item.post_id)}
+                      />
+                      <Button title={"Remove Like"}
+                      color="firebrick"
+                      onPress={() => this.deleteLikeFriendPost(item.post_id)}
                       />
                       <Text style={styles.regularText}>{item.author.first_name} {item.author.last_name}{"\n"}
                       {item.numLikes} Likes </Text>
@@ -208,7 +262,7 @@ class FriendProfileScreen extends Component{
                 keyExtractor={(item,index) => item.post_id.toString()}
           />
           <Button title="Go back to Friends" onPress={() => nav.navigate("Friends")}/>
-        </View>
+        </ScrollView>
       );
     }
     
