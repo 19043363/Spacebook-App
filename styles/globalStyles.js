@@ -41,4 +41,12 @@ export default StyleSheet.create({
         borderWidth: 1,
         borderRadius: 2
     },
+
+    profilePhoto: {
+        width: 100,
+        height: 100,
+        borderRadius: 100/ 2,
+        padding: 5,
+        margin: 5,
+    },
 });

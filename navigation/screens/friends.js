@@ -11,16 +11,16 @@ class FriendsScreen extends Component {
     this.state = {
       isLoading: true,
       listData: [],
-      friendId: ''
+      friendId: '',
+      user_id: ''
     }
   }
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
-    });
-  
-    this.getFriends();
+      this.getFriends();
+    });     
   }
 
   componentWillUnmount() {
@@ -29,9 +29,25 @@ class FriendsScreen extends Component {
 
   getFriends = async () => {
     const token = await AsyncStorage.getItem('@session_token');
-    const id = await AsyncStorage.getItem('user_id');
+    let id = await AsyncStorage.getItem('user_id');
+    let user_id = this.props.route.params
 
-    return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/friends", {
+    if (user_id != null)
+    {
+      this.setState({
+        userId: user_id.user_id
+      })
+    }
+    else
+    {
+      this.setState({
+        userId: id
+      })
+    }
+
+    console.log(this.state.userId)
+
+    return fetch("http://localhost:3333/api/1.0.0/user/" + this.state.userId + "/friends", {
       method: 'get',
       headers: {
         'X-Authorization':  token,

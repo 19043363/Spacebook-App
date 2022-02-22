@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Button, View, ScrollView, Text, TextInput, FlatList } from 'react-native';
+import { Button, Image, View, ScrollView, Text, TextInput, FlatList } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import GlobalStyles from '../../styles/globalStyles';
+import { ThemeProvider } from '@react-navigation/native';
 
 class FriendProfileScreen extends Component{
   constructor(props){
@@ -11,7 +12,8 @@ class FriendProfileScreen extends Component{
     this.state = {
       isLoading: true,
       listData: [],
-      postData: []
+      postData: [],
+      userPhoto: '',
     }
   }
 
@@ -21,6 +23,7 @@ class FriendProfileScreen extends Component{
     });
   
     this.getFriendData();
+    this.getUserProfilePhoto();
     this.getFriendPostData();
   }
 
@@ -64,6 +67,34 @@ class FriendProfileScreen extends Component{
             console.log(error);
         })
   }
+
+  getUserProfilePhoto = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id')
+    const { user_id } = this.props.route.params
+
+    return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/photo", {
+          method: 'get',
+          headers: {
+            'X-Authorization':  token,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((res) => {
+          return res.blob();
+        })
+        .then((resBlob) => {
+          let data = URL.createObjectURL(resBlob);
+          this.setState({
+            userPhoto: data,
+            isLoading: false
+          });
+          console.log(this.state.userPhoto)
+        })
+        .catch((error) => {
+          console.log("error", error)
+        });
+    }
 
   getFriendPostData = async () => {
     const token = await AsyncStorage.getItem('@session_token');
@@ -222,6 +253,19 @@ class FriendProfileScreen extends Component{
       return (
         <ScrollView>
           <Text style={GlobalStyles.headerText}>Friend Profile Placeholder</Text>
+
+          <Image
+            source={{
+              uri: this.state.userPhoto,
+            }}
+            style={GlobalStyles.profilePhoto}
+          />
+
+          <Button title="Friends"
+          onPress={() => nav.navigate("Friends", {
+            user_id
+          })}/>
+
           <Text style={GlobalStyles.regularText}>{this.state.firstName} {this.state.lastName} {"\n"}
           {this.state.email} {"\n"}
           Friends: {this.state.friendCount}</Text>

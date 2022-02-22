@@ -1,7 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { Component } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { IconName } from "react-icons/io";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import FriendStackNavigator from './friendStackNavigator';
@@ -41,7 +40,7 @@ class App extends Component{
                 // You can return any component that you like here!
                 return <Ionicons name={iconName} size={size} color={color} />;
               },
-              tabBarActiveTintColor: 'darkturquoise',
+              tabBarActiveTintColor: 'darkcyan',
               tabBarInactiveTintColor: 'gray',
               headerShown: false,
             })}

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Button, View, Text, TextInput, FlatList, ScrollView } from 'react-native';
+import { Button, Image, View, Text, TextInput, FlatList, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -19,6 +19,7 @@ class HomeScreen extends Component {
       friendCount: '',
       text: '',
       postData: [],
+      userPhoto: '',
     }
   }
 
@@ -28,6 +29,7 @@ class HomeScreen extends Component {
     });
   
     this.getUserData();
+    this.getUserProfilePhoto();
     this.getPostData();
   }
 
@@ -70,6 +72,33 @@ class HomeScreen extends Component {
             console.log(error);
         })
   }
+
+  getUserProfilePhoto = async () => {
+    const token = await AsyncStorage.getItem('@session_token');
+    const id = await AsyncStorage.getItem('user_id')
+
+    return fetch("http://localhost:3333/api/1.0.0/user/" + id + "/photo", {
+          method: 'get',
+          headers: {
+            'X-Authorization':  token,
+            'Content-Type': 'application/json'
+          }
+        })
+        .then((res) => {
+          return res.blob();
+        })
+        .then((resBlob) => {
+          let data = URL.createObjectURL(resBlob);
+          this.setState({
+            userPhoto: data,
+            isLoading: false
+          });
+          console.log(this.state.userPhoto)
+        })
+        .catch((error) => {
+          console.log("error", error)
+        });
+    }
 
   addPost = async () => {
     const token = await AsyncStorage.getItem('@session_token');
@@ -169,6 +198,8 @@ class HomeScreen extends Component {
         })
   }
 
+
+
   checkLoggedIn = async () => {
     const value = await AsyncStorage.getItem('@session_token');
     if (value == null) {
@@ -191,12 +222,25 @@ class HomeScreen extends Component {
         <ScrollView
         horizontal={false}>
           <Text style={GlobalStyles.headerText}>Home</Text>
+
+          <Image
+            source={{
+              uri: this.state.userPhoto,
+            }}
+            style={GlobalStyles.profilePhoto}
+          />
+
           <Text style={GlobalStyles.regularText}>{this.state.firstName} {this.state.lastName} {"\n"}
           {this.state.email} {"\n"}
           Friends: {this.state.friendCount}</Text>
 
           <Button title="Friends"
           onPress={() => nav.navigate("Friends")}/>
+
+          <Button
+            title="Edit Profile"
+            onPress={() => this.props.navigation.navigate("Edit Profile")}
+          />
 
           <Button
             title="Logout"
@@ -230,9 +274,7 @@ class HomeScreen extends Component {
                       <Button title={"Update Post"}
                       color="orange"
                       onPress={() => nav.navigate("Edit Post", 
-                      {post_id: item.post_id})
-                      }
-                      />
+                      {post_id: item.post_id})}/>
 
                       <Text style={GlobalStyles.regularText}>{item.author.first_name} {item.author.last_name}{"\n"}
                       {item.numLikes} Likes </Text>
