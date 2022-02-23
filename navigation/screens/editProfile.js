@@ -78,15 +78,24 @@ class EditProfileScreen extends Component {
 
     let to_send = {};
 
-    if (this.state.firstName != this.state.origFirstName){
+    if (this.state.firstName == ''){
+      to_send['first_name'] = this.state.origFirstName;
+    }
+    else if (this.state.firstName != this.state.origFirstName){
       to_send['first_name'] = this.state.firstName;
     }
 
-    if (this.state.lastName != this.state.origLastName){
+    if (this.state.lastName == ''){
+      to_send['last_name'] = this.state.origLastName;
+    }
+    else if (this.state.lastName != this.state.origLastName){
       to_send['last_name'] = this.state.lastName;
     }
 
-    if (this.state.email != this.state.origFirstName){
+    if (this.state.email == ''){
+      to_send['email'] = this.state.origEmail;
+    }
+    else if (this.state.email != this.state.origEmail){
       to_send['email'] = this.state.email;
     }
 
@@ -103,6 +112,7 @@ class EditProfileScreen extends Component {
         body: JSON.stringify(to_send)
     })
     .then((response) => {
+      this.props.navigation.navigate("Home")
       console.log("Item updated");
     })
     .catch((error) => {
@@ -165,10 +175,6 @@ class EditProfileScreen extends Component {
             onPress={() => this.updateUserData()}
           />
 
-          <Button
-            title="Return to Settings"
-            onPress={() => this.props.navigation.navigate("Settings")}
-          />
         </View>
       );
     }

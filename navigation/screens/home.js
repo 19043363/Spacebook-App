@@ -115,7 +115,8 @@ class HomeScreen extends Component {
           body: JSON.stringify(to_send)
         })
         .then((response) => {
-            if(response.status === 200){
+            if(response.status === 201){
+                this.getPostData();
                 return response.json()
             }else if(response.status === 401){
               this.props.navigation.navigate("Login");
@@ -177,6 +178,7 @@ class HomeScreen extends Component {
         })
         .then((response) => {
             if(response.status === 200){
+                this.getPostData();
                 return response.json()
             }else if(response.status === 401){
               this.props.navigation.navigate("Login");
@@ -185,11 +187,6 @@ class HomeScreen extends Component {
             }else{
                 throw 'Something went wrong';
             }
-        })
-        .then((responseJson) => {
-          this.setState({
-            isLoading: false,
-          })
         })
         .catch((error) => {
             console.log(error);
