@@ -26,11 +26,10 @@ class HomeScreen extends Component {
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.checkLoggedIn();
-    });
-  
-    this.getUserData();
-    this.getUserProfilePhoto();
-    this.getPostData();
+      this.getUserData();
+      this.getUserProfilePhoto();
+      this.getPostData();
+    });    
   }
 
   componentWillUnmount() {
@@ -93,7 +92,6 @@ class HomeScreen extends Component {
             userPhoto: data,
             isLoading: false
           });
-          console.log(this.state.userPhoto)
         })
         .catch((error) => {
           console.log("error", error)
@@ -236,6 +234,11 @@ class HomeScreen extends Component {
 
           <Button title="Friends"
           onPress={() => nav.navigate("Friends")}/>
+
+          <Button
+            title="Take Photo"
+            onPress={() => this.props.navigation.navigate("Take Photo")}
+          />
 
           <Button
             title="Edit Profile"

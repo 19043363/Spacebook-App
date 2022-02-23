@@ -89,7 +89,6 @@ class FriendProfileScreen extends Component{
             userPhoto: data,
             isLoading: false
           });
-          console.log(this.state.userPhoto)
         })
         .catch((error) => {
           console.log("error", error)
