@@ -49,4 +49,26 @@ export default StyleSheet.create({
         padding: 5,
         margin: 5,
     },
+
+    takePhotoContainer: {
+        flex: 1,
+    },
+    camera: {
+        flex: 1,
+    },
+    takePhotoButtonContainer: {
+        flex: 1,
+        backgroundColor: 'transparent',
+        flexDirection: 'row',
+        margin: 20,
+    },
+    takePhotoButton: {
+        flex: 0.1,
+        alignSelf: 'flex-end',
+        alignItems: 'center',
+    },
+    takePhotoText: {
+        fontSize: 18,
+        color: 'white',
+    },
 });

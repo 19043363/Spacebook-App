@@ -16,6 +16,7 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/stack": "^6.1.1",
     "expo": "~44.0.0",
+    "expo-camera": "~12.1.2",
     "expo-status-bar": "~1.2.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
@@ -25,12 +26,17 @@
     "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
-    "react-native-web": "0.17.1",
-    "expo-camera": "~12.1.2"
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@expo/webpack-config": "^0.16.18"
+    "@expo/webpack-config": "^0.16.18",
+    "eslint": "^8.9.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.29.1",
+    "eslint-plugin-react-hooks": "^4.3.0"
   },
   "private": true
 }
