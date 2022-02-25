@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Button, ScrollView, TextInput, Text } from "react-native";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class SignupScreen extends Component {

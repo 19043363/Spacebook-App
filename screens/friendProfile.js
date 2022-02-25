@@ -9,7 +9,6 @@ import {
   FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class FriendProfileScreen extends Component {
@@ -18,9 +17,13 @@ class FriendProfileScreen extends Component {
 
     this.state = {
       isLoading: true,
-      listData: [],
       postData: [],
       userPhoto: "",
+      userId: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      friendCount: 0,
     };
   }
 
@@ -40,7 +43,6 @@ class FriendProfileScreen extends Component {
 
   getFriendData = async () => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
     const { user_id } = this.props.route.params;
 
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id, {
@@ -62,7 +64,6 @@ class FriendProfileScreen extends Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          userData: responseJson,
           userId: responseJson.user_id,
           firstName: responseJson.first_name,
           lastName: responseJson.last_name,
@@ -77,7 +78,6 @@ class FriendProfileScreen extends Component {
 
   getUserProfilePhoto = async () => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
     const { user_id } = this.props.route.params;
 
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/photo", {
@@ -104,7 +104,6 @@ class FriendProfileScreen extends Component {
 
   getFriendPostData = async () => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
     const { user_id } = this.props.route.params;
 
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post", {
@@ -119,6 +118,8 @@ class FriendProfileScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+        } else if (response.status === 403) {
+          throw "Can only view the posts of yourself or your friends";
         } else {
           throw "Something went wrong";
         }
@@ -136,7 +137,6 @@ class FriendProfileScreen extends Component {
 
   likeFriendPost = async (post_id) => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
     const { user_id } = this.props.route.params;
 
     return fetch(
@@ -176,7 +176,6 @@ class FriendProfileScreen extends Component {
 
   removeLikeFromFriendPost = async (post_id) => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
     const { user_id } = this.props.route.params;
 
     return fetch(
@@ -198,6 +197,8 @@ class FriendProfileScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+        } else if (response.status === 403) {
+          throw "You have not liked this post";
         } else {
           throw "Something went wrong";
         }
@@ -214,7 +215,6 @@ class FriendProfileScreen extends Component {
 
   postAddPost = async () => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
     const { user_id } = this.props.route.params;
 
     let to_send = {
@@ -230,7 +230,7 @@ class FriendProfileScreen extends Component {
       body: JSON.stringify(to_send),
     })
       .then((response) => {
-        if (response.status === 200) {
+        if (response.status === 201) {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");

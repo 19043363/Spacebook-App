@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Button, View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class FriendRequestsScreen extends Component {
@@ -10,7 +9,6 @@ class FriendRequestsScreen extends Component {
 
     this.state = {
       isLoading: true,
-      listData: [],
     };
   }
 
@@ -38,6 +36,8 @@ class FriendRequestsScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+        } else if (response.status === 403) {
+          throw "Forbidden";
         } else {
           throw "Something went wrong";
         }
@@ -45,7 +45,6 @@ class FriendRequestsScreen extends Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          listData: responseJson,
         });
       })
       .catch((error) => {

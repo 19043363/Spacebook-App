@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Button, View, Text, TextInput, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class FindFriendsScreen extends Component {
@@ -11,60 +10,34 @@ class FindFriendsScreen extends Component {
     this.state = {
       isLoading: true,
       friendData: [],
-      friendData: [],
       friendSearch: "",
+      pageLimit: 3,
+      offset: 0,
+      searchResultsLeft: 0,
     };
   }
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener("focus", () => {
       this.checkLoggedIn();
+      this.getFriendsSearch();
     });
-
-    this.getSearchList();
   }
 
   componentWillUnmount() {
     this.unsubscribe();
   }
 
-  getSearchList = async () => {
+  getFriendsSearch = async () => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
-
-    return fetch("http://localhost:3333/api/1.0.0/search", {
-      method: "get",
-      headers: {
-        "X-Authorization": token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (response.status === 200) {
-          return response.json();
-        } else if (response.status === 401) {
-          this.props.navigation.navigate("Login");
-        } else {
-          throw "Something went wrong";
-        }
-      })
-      .then((responseJson) => {
-        this.setState({
-          isLoading: false,
-          friendData: responseJson,
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  getUserFriendsSearch = async () => {
-    const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
 
     return fetch(
-      "http://localhost:3333/api/1.0.0/search?q=" + this.state.friendSearch,
+      "http://localhost:3333/api/1.0.0/search?q=" +
+        this.state.friendSearch +
+        "&limit=" +
+        this.state.pageLimit +
+        "&offset=" +
+        this.state.offset,
       {
         method: "get",
         headers: {
@@ -76,6 +49,8 @@ class FindFriendsScreen extends Component {
       .then((response) => {
         if (response.status === 200) {
           return response.json();
+        } else if (response.status === 400) {
+          throw "Bad request";
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
         } else {
@@ -86,6 +61,7 @@ class FindFriendsScreen extends Component {
         this.setState({
           isLoading: false,
           friendData: responseJson,
+          searchResultsLeft: responseJson.length,
         });
       })
       .catch((error) => {
@@ -95,7 +71,6 @@ class FindFriendsScreen extends Component {
 
   postAddFriend = async (user_id) => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
 
     return fetch(
       "http://localhost:3333/api/1.0.0/user/" + user_id + "/friends",
@@ -128,6 +103,32 @@ class FindFriendsScreen extends Component {
       });
   };
 
+  getNextSearchPage() {
+    let offset = this.state.offset;
+    let pageLimit = this.state.pageLimit;
+
+    if (this.state.searchResultsLeft >= this.state.pageLimit) {
+      this.setState({
+        offset: offset + pageLimit,
+      });
+    }
+
+    this.getFriendsSearch();
+  }
+
+  getPreviousSearchPage() {
+    let offset = this.state.offset;
+    let pageLimit = this.state.pageLimit;
+
+    if (offset != 0) {
+      this.setState({
+        offset: offset - pageLimit,
+      });
+    }
+
+    this.getFriendsSearch();
+  }
+
   checkLoggedIn = async () => {
     const token = await AsyncStorage.getItem("@session_token");
     if (token == null) {
@@ -156,7 +157,7 @@ class FindFriendsScreen extends Component {
           <Button
             title="Search"
             color="darkblue"
-            onPress={() => this.getUserFriendsSearch()}
+            onPress={() => this.getFriendsSearch()}
           />
 
           <Button
@@ -178,6 +179,18 @@ class FindFriendsScreen extends Component {
               </View>
             )}
             keyExtractor={(item, index) => item.user_id.toString()}
+          />
+
+          <Button
+            title="Previous Page"
+            color="darkblue"
+            onPress={() => this.getPreviousSearchPage()}
+          />
+
+          <Button
+            title="Next Page"
+            color="darkblue"
+            onPress={() => this.getNextSearchPage()}
           />
         </View>
       );

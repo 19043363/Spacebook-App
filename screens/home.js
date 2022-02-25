@@ -17,7 +17,6 @@ class HomeScreen extends Component {
 
     this.state = {
       isLoading: true,
-      userData: [],
       userId: "",
       firstName: "",
       lastName: "",
@@ -26,7 +25,6 @@ class HomeScreen extends Component {
       text: "",
       postData: [],
       userPhoto: "",
-      photo: null,
     };
   }
 
@@ -59,8 +57,6 @@ class HomeScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
-        } else if (response.status === 404) {
-          throw "Not Found";
         } else {
           throw "Something went wrong";
         }
@@ -68,7 +64,6 @@ class HomeScreen extends Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          userData: responseJson,
           userId: responseJson.user_id,
           firstName: responseJson.first_name,
           lastName: responseJson.last_name,
@@ -93,7 +88,7 @@ class HomeScreen extends Component {
       },
     })
       .then((res) => {
-        return res.blob();
+          return res.blob();
       })
       .then((resBlob) => {
         let data = URL.createObjectURL(resBlob);
@@ -159,6 +154,8 @@ class HomeScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+        } else if (response.status === 403) {
+          throw "Can only view the posts of yourself or your friends";
         } else {
           throw "Something went wrong";
         }

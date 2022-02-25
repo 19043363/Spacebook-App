@@ -9,12 +9,10 @@ class EditProfileScreen extends Component {
 
     this.state = {
       isLoading: true,
-      origUserData: [],
       userId: "",
       origFirstName: "",
       origLastName: "",
       origEmail: "",
-      origPassword: "",
       firstName: "",
       lastName: "",
       email: "",
@@ -57,7 +55,6 @@ class EditProfileScreen extends Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          origUserData: responseJson,
           userId: responseJson.user_id,
           origFirstName: responseJson.first_name,
           origLastName: responseJson.last_name,
@@ -115,9 +112,6 @@ class EditProfileScreen extends Component {
           this.props.navigation.navigate("Login");
         } else if (response.status === 403) {
           console.log("Forbidden");
-        } else if (response.status === 403) {
-          4;
-          console.log("Not Found");
         } else {
           throw "Something went wrong";
         }

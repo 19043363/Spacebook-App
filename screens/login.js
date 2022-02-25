@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Button, Text } from "react-native";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class LoginScreen extends Component {

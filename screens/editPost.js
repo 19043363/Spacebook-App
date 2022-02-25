@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Button, View, Text, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class EditProfileScreen extends Component {
@@ -10,7 +9,6 @@ class EditProfileScreen extends Component {
 
     this.state = {
       isLoading: true,
-      origUserData: [],
       userId: "",
       origText: "",
       text: "",
@@ -87,7 +85,17 @@ class EditProfileScreen extends Component {
       }
     )
       .then((response) => {
-        console.log("Item updated");
+        if (response.status === 200) {
+          console.log("Item updated");
+          return response.json();
+        } else if (response.status === 401) {
+          this.props.navigation.navigate("Login");
+        } else if (response.status === 403) {
+          throw "You can only update your own posts";
+        } else {
+          throw "Something went wrong";
+        }
+        
       })
       .catch((error) => {
         console.log(error);

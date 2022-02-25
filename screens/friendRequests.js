@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Button, View, Text, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class FriendRequestsScreen extends Component {
@@ -10,7 +9,7 @@ class FriendRequestsScreen extends Component {
 
     this.state = {
       isLoading: true,
-      listData: [],
+      friendRequestData: [],
     };
   }
 
@@ -48,7 +47,7 @@ class FriendRequestsScreen extends Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          listData: responseJson,
+          friendRequestData: responseJson,
         });
       })
       .catch((error) => {
@@ -139,7 +138,7 @@ class FriendRequestsScreen extends Component {
         <View>
           <Text style={GlobalStyles.headerText}>Friends Requests</Text>
           <FlatList
-            data={this.state.listData}
+            data={this.state.friendRequestData}
             renderItem={({ item }) => (
               <View>
                 <Button title={item.first_name + " " + item.last_name} />

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { Button, View, Text, FlatList } from "react-native";
+import { Button, View, Text, TextInput, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class FriendsScreen extends Component {
@@ -10,9 +9,10 @@ class FriendsScreen extends Component {
 
     this.state = {
       isLoading: true,
-      listData: [],
+      friendData: [],
       friendId: "",
       user_id: "",
+      friendSearch: "",
     };
   }
 
@@ -66,7 +66,40 @@ class FriendsScreen extends Component {
       .then((responseJson) => {
         this.setState({
           isLoading: false,
-          listData: responseJson,
+          friendData: responseJson,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  getFriendsSearch = async () => {
+    const token = await AsyncStorage.getItem("@session_token");
+
+    return fetch(
+      "http://localhost:3333/api/1.0.0/search?search_in=friends&q=" + this.state.friendSearch,
+      {
+        method: "get",
+        headers: {
+          "X-Authorization": token,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          return response.json();
+        } else if (response.status === 401) {
+          this.props.navigation.navigate("Login");
+        } else {
+          throw "Something went wrong";
+        }
+      })
+      .then((responseJson) => {
+        this.setState({
+          isLoading: false,
+          friendData: responseJson,
         });
       })
       .catch((error) => {
@@ -94,8 +127,22 @@ class FriendsScreen extends Component {
       return (
         <View>
           <Text style={GlobalStyles.headerText}>Friends</Text>
+
+          <TextInput
+            style={GlobalStyles.regularText}
+            placeholder="Search for Friends"
+            onChangeText={(friendSearch) => this.setState({ friendSearch })}
+            value={this.state.friendSearch}
+          />
+
+          <Button
+            title="Search"
+            color="darkblue"
+            onPress={() => this.getFriendsSearch()}
+          />
+
           <FlatList
-            data={this.state.listData}
+            data={this.state.friendData}
             renderItem={({ item }) => (
               <View>
                 <Button

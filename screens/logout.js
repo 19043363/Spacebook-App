@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Text, ScrollView, Button } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class LogoutScreen extends Component {

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import GlobalStyles from "../styles/globalStyles";
 
 class TakePhotoScreen extends Component {
@@ -36,6 +35,7 @@ class TakePhotoScreen extends Component {
     })
       .then((response) => {
         console.log("Picture added", response);
+        this.props.navigation.navigate("Home");
       })
       .catch((err) => {
         console.log(err);
