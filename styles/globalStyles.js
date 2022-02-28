@@ -45,7 +45,7 @@ export default StyleSheet.create({
     profilePhoto: {
         width: 100,
         height: 100,
-        borderRadius: 100/ 2,
+        borderRadius: 100 / 2,
         padding: 5,
         margin: 5,
     },
@@ -70,5 +70,13 @@ export default StyleSheet.create({
     takePhotoText: {
         fontSize: 18,
         color: 'white',
+    },
+    deleteButton: {
+        alignItems: "center",
+        backgroundColor: "transparent",
+        padding: 10,
+    },
+    buttonText: {
+        color: "white",
     },
 });
