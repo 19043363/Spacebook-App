@@ -269,7 +269,9 @@ class FriendProfileScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <Text style={GlobalStyles.headerText}>Friend Profile</Text>
+          <Text style={GlobalStyles.headerText}>
+            Friend Profile Placeholder
+          </Text>
 
           <Image
             source={{

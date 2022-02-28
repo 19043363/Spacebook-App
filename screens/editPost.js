@@ -121,7 +121,7 @@ class EditProfileScreen extends Component {
     } else {
       return (
         <View>
-          <Text style={GlobalStyles.headerText}>Edit Post</Text>
+          <Text style={GlobalStyles.headerText}>Edit Post Placeholder</Text>
           <TextInput
             style={GlobalStyles.postTextInput}
             placeholder={"Edit your Post"}

@@ -26,12 +26,9 @@ class LoginScreen extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log("User logged in successfully")
           return response.json();
         } else if (response.status === 400) {
-          throw "Invalid email/password supplied";
-        } else if (response.status === 500) {
-          throw "Server error";
+          throw "Invalid email or password";
         } else {
           throw "Something went wrong";
         }
