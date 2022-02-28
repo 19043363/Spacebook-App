@@ -54,11 +54,18 @@ class FriendsScreen extends Component {
     )
       .then((response) => {
         if (response.status === 200) {
+          console.log(response.statusText);
+          console.log("User friends retrieved")
           return response.json();
         } else if (response.status === 401) {
+          console.log("Unauthorised")
           this.props.navigation.navigate("Login");
         } else if (response.status === 403) {
           throw "Can only view the friends of yourself or your friends";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -89,9 +96,17 @@ class FriendsScreen extends Component {
     )
       .then((response) => {
         if (response.status === 200) {
+          console.log("Friend search retrieved")
           return response.json();
         } else if (response.status === 401) {
+          console.log("Unauthorised");
           this.props.navigation.navigate("Login");
+        } else if (response.status === 403) {
+          throw "Can only view the friends of yourself or your friends";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }

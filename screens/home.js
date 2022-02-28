@@ -5,10 +5,12 @@ import {
   View,
   Text,
   TextInput,
+  TouchableOpacity,
   FlatList,
   ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalStyles from "../styles/globalStyles";
 
 class HomeScreen extends Component {
@@ -88,7 +90,7 @@ class HomeScreen extends Component {
       },
     })
       .then((res) => {
-          return res.blob();
+        return res.blob();
       })
       .then((resBlob) => {
         let data = URL.createObjectURL(resBlob);
@@ -211,6 +213,7 @@ class HomeScreen extends Component {
 
   render() {
     const nav = this.props.navigation;
+    const buttonSize = 28;
 
     if (this.state.isLoading) {
       return (
@@ -273,26 +276,34 @@ class HomeScreen extends Component {
             renderItem={({ item }) => (
               <View>
                 <Text style={GlobalStyles.postText}>{item.text} </Text>
-
-                <Button
-                  title={"Delete Post"}
-                  color="firebrick"
-                  onPress={() => this.removePost(item.post_id)}
-                />
-
-                <Button
-                  title={"Update Post"}
-                  color="orange"
-                  onPress={() =>
-                    nav.navigate("Edit Post", { post_id: item.post_id })
-                  }
-                />
-
+                <View style={{ flexDirection: 'row' }}>
                 <Text style={GlobalStyles.regularText}>
                   {item.author.first_name} {item.author.last_name}
                   {"\n"}
                   {item.numLikes} Likes{" "}
                 </Text>
+                <TouchableOpacity
+                  style={GlobalStyles.deleteButton}
+                  onPress={() => this.removePost(item.post_id)}
+                >
+                  <View>
+                    <Ionicons name={"trash-bin"} size={buttonSize} color={"red"} />
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={GlobalStyles.deleteButton}
+                  onPress={() =>
+                    nav.navigate("Edit Post", { post_id: item.post_id })
+                  }
+                >
+                  <View>
+                    <Ionicons name={"create-outline"} size={buttonSize} color={"red"} />
+                  </View>
+                </TouchableOpacity>
+
+                
+                </View>
               </View>
             )}
             keyExtractor={(item, index) => item.post_id.toString()}

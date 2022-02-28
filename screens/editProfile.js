@@ -23,9 +23,8 @@ class EditProfileScreen extends Component {
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener("focus", () => {
       this.checkLoggedIn();
+      this.getUserData();
     });
-
-    this.getUserData();
   }
 
   componentWillUnmount() {
@@ -45,9 +44,15 @@ class EditProfileScreen extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
+          console.log("User data retrieved");
           return response.json();
         } else if (response.status === 401) {
+          console.log("Unauthorised");
           this.props.navigation.navigate("Login");
+        } else if (response.status === 404) {
+          throw "Not found"
+        } else if (response.status === 500) {
+          throw "Server error"
         } else {
           throw "Something went wrong";
         }
@@ -104,14 +109,19 @@ class EditProfileScreen extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
+          console.log("User data updated");
           this.props.navigation.navigate("Home");
-          console.log("Item updated");
         } else if (response.status === 400) {
-          console.log("Bad request");
+          throw "Bad request";
         } else if (response.status === 401) {
+          console.log("Unauthorised")
           this.props.navigation.navigate("Login");
         } else if (response.status === 403) {
-          console.log("Forbidden");
+          throw "Forbidden";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error"
         } else {
           throw "Something went wrong";
         }
@@ -138,7 +148,7 @@ class EditProfileScreen extends Component {
     } else {
       return (
         <View>
-          <Text style={GlobalStyles.headerText}>Edit Profile Placeholder</Text>
+          <Text style={GlobalStyles.headerText}>Edit Profile</Text>
 
           <Text style={GlobalStyles.regularText}>First Name</Text>
           <TextInput
