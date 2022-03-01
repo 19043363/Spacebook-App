@@ -13,7 +13,8 @@ class SignupScreen extends Component {
       password: "",
       confirmPassword: "",
 
-      checkInvalidInput: false,
+      differentPasswords: false,
+      invalidEmailOrPassword: false,
     };
   }
 
@@ -31,6 +32,9 @@ class SignupScreen extends Component {
         if (response.status === 201) {
           return response.json();
         } else if (response.status === 400) {
+          this.setState({
+            invalidEmailOrPassword: true,
+          });
           throw "Failed validation";
         } else if (response.status === 500) {
           throw "Server error";
@@ -47,23 +51,28 @@ class SignupScreen extends Component {
       });
   };
 
-  formValidation(){
-    if (this.state.password != this.state.confirmPassword)
-    {
+  formValidation() {
+    if (this.state.password != this.state.confirmPassword) {
       this.setState({
-        checkInvalidInput: true
-      })
-    } else{
+        differentPasswords: true,
+      });
+    } else {
       this.setState({
-        checkInvalidInput: false
-      })
+        differentPasswords: false,
+      });
       this.signup();
     }
   }
 
-  checkInvalidInput(){
-    if (this.state.checkInvalidInput === true){
-      return <Text style={GlobalStyles.errorText}>Passwords do not match</Text>
+  checkInvalidInput() {
+    if (this.state.differentPasswords === true) {
+      return <Text style={GlobalStyles.errorText}>Passwords do not match.</Text>;
+    } else if (this.state.invalidEmailOrPassword === true) {
+      return (
+        <Text style={GlobalStyles.errorText}>
+          Email must be valid and password must be greater than 5 characters.
+        </Text>
+      );
     }
     return null;
   }
@@ -112,7 +121,10 @@ class SignupScreen extends Component {
           style={GlobalStyles.userDataTextBox}
         />
         {this.checkInvalidInput()}
-        <Button title="Create an account" onPress={() => this.formValidation()} />
+        <Button
+          title="Create an account"
+          onPress={() => this.formValidation()}
+        />
         <Button
           onPress={() => this.props.navigation.navigate("Login")}
           color="darkblue"

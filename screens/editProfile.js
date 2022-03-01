@@ -18,7 +18,8 @@ class EditProfileScreen extends Component {
       email: "",
       password: "",
       confirmPassword: "",
-      checkInvalidInput: false,
+      differentPasswords: false,
+      invalidEmailOrPassword: false,
     };
   }
 
@@ -50,9 +51,9 @@ class EditProfileScreen extends Component {
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
         } else if (response.status === 404) {
-          throw "Not found"
+          throw "Not found";
         } else if (response.status === 500) {
-          throw "Server error"
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -111,6 +112,9 @@ class EditProfileScreen extends Component {
         if (response.status === 200) {
           this.props.navigation.navigate("Home");
         } else if (response.status === 400) {
+          this.setState({
+            invalidEmailOrPassword: true
+          })
           throw "Bad request";
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
@@ -119,7 +123,7 @@ class EditProfileScreen extends Component {
         } else if (response.status === 404) {
           throw "Not found";
         } else if (response.status === 500) {
-          throw "Server error"
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -129,23 +133,30 @@ class EditProfileScreen extends Component {
       });
   };
 
-  formValidation(){
-    if (this.state.password != this.state.confirmPassword)
-    {
+  formValidation() {
+    if (this.state.password != this.state.confirmPassword) {
       this.setState({
-        checkInvalidInput: true
-      })
-    } else{
+        differentPasswords: true,
+      });
+    } else {
       this.setState({
-        checkInvalidInput: false
-      })
+        differentPasswords: false,
+      });
       this.updateUserData();
     }
   }
 
-  checkInvalidInput(){
-    if (this.state.checkInvalidInput === true){
-      return <Text style={GlobalStyles.errorText}>Passwords do not match</Text>
+  checkInvalidInput() {
+    if (this.state.differentPasswords === true) {
+      return (
+        <Text style={GlobalStyles.errorText}>Passwords do not match.</Text>
+      );
+    } else if (this.state.invalidEmailOrPassword === true) {
+      return (
+        <Text style={GlobalStyles.errorText}>
+          Email must be valid and password must be greater than 5 characters.
+        </Text>
+      );
     }
     return null;
   }
@@ -207,7 +218,9 @@ class EditProfileScreen extends Component {
             style={GlobalStyles.regularText}
             placeholder={"Confirm Password"}
             secureTextEntry
-            onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+            onChangeText={(confirmPassword) =>
+              this.setState({ confirmPassword })
+            }
             value={this.state.confirmPassword}
           />
           {this.checkInvalidInput()}
