@@ -26,7 +26,6 @@ class SignupScreen extends Component {
     })
       .then((response) => {
         if (response.status === 201) {
-          console.log("Account created")
           return response.json();
         } else if (response.status === 400) {
           throw "Failed validation";

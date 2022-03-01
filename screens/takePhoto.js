@@ -34,8 +34,19 @@ class TakePhotoScreen extends Component {
       body: blob,
     })
       .then((response) => {
-        console.log("Picture added", response);
-        this.props.navigation.navigate("Home");
+        if (response.status === 200) {
+          this.props.navigation.navigate("Home");
+        } else if (response.status === 400) {
+          throw "Bad request";
+        } else if (response.status === 401) {
+          this.props.navigation.navigate("Login");
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
+        } else {
+          throw "Something went wrong";
+        }
       })
       .catch((err) => {
         console.log(err);

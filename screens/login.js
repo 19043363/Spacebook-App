@@ -11,6 +11,8 @@ class LoginScreen extends Component {
     this.state = {
       email: "",
       password: "",
+
+      checkInvalidInput: false,
     };
   }
 
@@ -26,9 +28,11 @@ class LoginScreen extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log("User logged in successfully")
           return response.json();
         } else if (response.status === 400) {
+          this.setState({
+            checkInvalidInput: true
+          })
           throw "Invalid email/password supplied";
         } else if (response.status === 500) {
           throw "Server error";
@@ -46,16 +50,26 @@ class LoginScreen extends Component {
       });
   };
 
+  checkInvalidInput(){
+
+    if (this.state.checkInvalidInput === true){
+      return <Text style={GlobalStyles.errorText}>Invalid email/password supplied </Text>
+    }
+    return null;
+  }
+
   render() {
     return (
       <ScrollView>
         <Text style={GlobalStyles.headerText}>Login</Text>
+
         <TextInput
           placeholder="Enter your email..."
           onChangeText={(email) => this.setState({ email })}
           value={this.state.email}
           style={GlobalStyles.userDataTextBox}
         />
+
         <TextInput
           placeholder="Enter your password..."
           onChangeText={(password) => this.setState({ password })}
@@ -63,7 +77,11 @@ class LoginScreen extends Component {
           secureTextEntry
           style={GlobalStyles.userDataTextBox}
         />
+
+        {this.checkInvalidInput()}
+
         <Button title="Login" onPress={() => this.login()} />
+
         <Button
           title="Don't have an account?"
           color="darkblue"

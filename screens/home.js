@@ -19,14 +19,17 @@ class HomeScreen extends Component {
 
     this.state = {
       isLoading: true,
+      userPhoto: "",
       userId: "",
       firstName: "",
       lastName: "",
       email: "",
       friendCount: "",
+
       text: "",
       postData: [],
-      userPhoto: "",
+      
+      
     };
   }
 
@@ -59,6 +62,8 @@ class HomeScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+        } else if (response.status === 404) {
+          throw "Not found";
         } else {
           throw "Something went wrong";
         }
@@ -89,11 +94,23 @@ class HomeScreen extends Component {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
-        return res.blob();
+      .then((response) => {
+        if (response.status === 200) {
+          return response.blob();
+        } else if (response.status === 400) {
+          throw "Bad request";
+        } else if (response.status === 401) {
+          this.props.navigation.navigate("Login");
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
+        } else {
+          throw "Something went wrong";
+        }
       })
-      .then((resBlob) => {
-        let data = URL.createObjectURL(resBlob);
+      .then((responseBlob) => {
+        let data = URL.createObjectURL(responseBlob);
         this.setState({
           userPhoto: data,
           isLoading: false,
@@ -126,6 +143,10 @@ class HomeScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -158,6 +179,10 @@ class HomeScreen extends Component {
           this.props.navigation.navigate("Login");
         } else if (response.status === 403) {
           throw "Can only view the posts of yourself or your friends";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -195,6 +220,10 @@ class HomeScreen extends Component {
           this.props.navigation.navigate("Login");
         } else if (response.status === 403) {
           throw "You can only delete your own posts";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -224,7 +253,6 @@ class HomeScreen extends Component {
     } else {
       return (
         <ScrollView horizontal={false}>
-          <Text style={GlobalStyles.headerText}>Home</Text>
 
           <Image
             source={{
@@ -276,33 +304,43 @@ class HomeScreen extends Component {
             renderItem={({ item }) => (
               <View>
                 <Text style={GlobalStyles.postText}>{item.text} </Text>
-                <View style={{ flexDirection: 'row' }}>
-                <Text style={GlobalStyles.regularText}>
-                  {item.author.first_name} {item.author.last_name}
-                  {"\n"}
-                  {item.numLikes} Likes{" "}
-                </Text>
-                <TouchableOpacity
-                  style={GlobalStyles.deleteButton}
-                  onPress={() => this.removePost(item.post_id)}
-                >
-                  <View>
-                    <Ionicons name={"trash-bin"} size={buttonSize} color={"red"} />
-                  </View>
-                </TouchableOpacity>
 
-                <TouchableOpacity
-                  style={GlobalStyles.deleteButton}
-                  onPress={() =>
-                    nav.navigate("Edit Post", { post_id: item.post_id })
-                  }
-                >
-                  <View>
-                    <Ionicons name={"create-outline"} size={buttonSize} color={"red"} />
-                  </View>
-                </TouchableOpacity>
+                <View style={{ flexDirection: "row" }}>
 
-                
+                  <Text style={GlobalStyles.regularText}>
+                    {item.author.first_name} {item.author.last_name}
+                    {"\n"}
+                    {item.numLikes} Likes{" "}
+                  </Text>
+
+                  <TouchableOpacity
+                    style={GlobalStyles.button}
+                    onPress={() => this.removePost(item.post_id)}
+                  >
+                    <View>
+                      <Ionicons
+                        name={"trash-bin"}
+                        size={buttonSize}
+                        color={"black"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={GlobalStyles.button}
+                    onPress={() =>
+                      nav.navigate("Edit Post", { post_id: item.post_id })
+                    }
+                  >
+                    <View>
+                      <Ionicons
+                        name={"create-outline"}
+                        size={buttonSize}
+                        color={"black"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+
                 </View>
               </View>
             )}

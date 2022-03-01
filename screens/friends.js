@@ -54,11 +54,8 @@ class FriendsScreen extends Component {
     )
       .then((response) => {
         if (response.status === 200) {
-          console.log(response.statusText);
-          console.log("User friends retrieved")
           return response.json();
         } else if (response.status === 401) {
-          console.log("Unauthorised")
           this.props.navigation.navigate("Login");
         } else if (response.status === 403) {
           throw "Can only view the friends of yourself or your friends";

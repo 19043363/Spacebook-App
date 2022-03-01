@@ -44,10 +44,8 @@ class EditProfileScreen extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log("User data retrieved");
           return response.json();
         } else if (response.status === 401) {
-          console.log("Unauthorised");
           this.props.navigation.navigate("Login");
         } else if (response.status === 404) {
           throw "Not found"
@@ -109,12 +107,10 @@ class EditProfileScreen extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log("User data updated");
           this.props.navigation.navigate("Home");
         } else if (response.status === 400) {
           throw "Bad request";
         } else if (response.status === 401) {
-          console.log("Unauthorised")
           this.props.navigation.navigate("Login");
         } else if (response.status === 403) {
           throw "Forbidden";

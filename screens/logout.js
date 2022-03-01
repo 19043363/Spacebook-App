@@ -42,10 +42,8 @@ class LogoutScreen extends Component {
     })
       .then((response) => {
         if (response.status === 200) {
-          console.log("User logged out successfully")
           this.props.navigation.navigate("Login");
         } else if (response.status === 401) {
-          console.log("Unauthorised")
           this.props.navigation.navigate("Login");
         } else if (response.status === 500) {
           throw "Server error";

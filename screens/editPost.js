@@ -47,6 +47,12 @@ class EditProfileScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+        } else if (response.status === 403) {
+          throw "Can only view the posts of yourself or your friends";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -89,9 +95,13 @@ class EditProfileScreen extends Component {
           console.log("Item updated");
           return response.json();
         } else if (response.status === 401) {
+          throw "Bad request";
+        } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
         } else if (response.status === 403) {
           throw "You can only update your own posts";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }

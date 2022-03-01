@@ -20,6 +20,13 @@ export default StyleSheet.create({
         margin: 5,
     },
 
+    errorText: {
+        fontSize: 14,
+        color: "red",
+        padding: 5,
+        margin: 5,
+    },
+
     userDataTextBox: {
         padding: 5,
         borderWidth: 1,
@@ -71,12 +78,9 @@ export default StyleSheet.create({
         fontSize: 18,
         color: 'white',
     },
-    deleteButton: {
+    button: {
         alignItems: "center",
         backgroundColor: "transparent",
         padding: 10,
-    },
-    buttonText: {
-        color: "white",
     },
 });
