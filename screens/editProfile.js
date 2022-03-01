@@ -17,6 +17,8 @@ class EditProfileScreen extends Component {
       lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
+      checkInvalidInput: false,
     };
   }
 
@@ -127,6 +129,27 @@ class EditProfileScreen extends Component {
       });
   };
 
+  formValidation(){
+    if (this.state.password != this.state.confirmPassword)
+    {
+      this.setState({
+        checkInvalidInput: true
+      })
+    } else{
+      this.setState({
+        checkInvalidInput: false
+      })
+      this.updateUserData();
+    }
+  }
+
+  checkInvalidInput(){
+    if (this.state.checkInvalidInput === true){
+      return <Text style={GlobalStyles.errorText}>Passwords do not match</Text>
+    }
+    return null;
+  }
+
   checkLoggedIn = async () => {
     const value = await AsyncStorage.getItem("@session_token");
     if (value == null) {
@@ -179,7 +202,16 @@ class EditProfileScreen extends Component {
             value={this.state.password}
           />
 
-          <Button title="Update" onPress={() => this.updateUserData()} />
+          <Text style={GlobalStyles.regularText}>Confirm Password</Text>
+          <TextInput
+            style={GlobalStyles.regularText}
+            placeholder={"Confirm Password"}
+            secureTextEntry
+            onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+            value={this.state.confirmPassword}
+          />
+          {this.checkInvalidInput()}
+          <Button title="Update" onPress={() => this.formValidation()} />
         </View>
       );
     }

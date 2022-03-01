@@ -11,6 +11,9 @@ class SignupScreen extends Component {
       last_name: "",
       email: "",
       password: "",
+      confirmPassword: "",
+
+      checkInvalidInput: false,
     };
   }
 
@@ -44,29 +47,55 @@ class SignupScreen extends Component {
       });
   };
 
+  formValidation(){
+    if (this.state.password != this.state.confirmPassword)
+    {
+      this.setState({
+        checkInvalidInput: true
+      })
+    } else{
+      this.setState({
+        checkInvalidInput: false
+      })
+      this.signup();
+    }
+  }
+
+  checkInvalidInput(){
+    if (this.state.checkInvalidInput === true){
+      return <Text style={GlobalStyles.errorText}>Passwords do not match</Text>
+    }
+    return null;
+  }
+
   render() {
     return (
       <ScrollView>
         <Text style={GlobalStyles.headerText}>Sign up</Text>
         <Text style={GlobalStyles.headerText}>Welcome to Spacebook!</Text>
+
+        <Text style={GlobalStyles.regularText}>First Name</Text>
         <TextInput
           placeholder="Enter your first name..."
           onChangeText={(first_name) => this.setState({ first_name })}
           value={this.state.first_name}
           style={GlobalStyles.userDataTextBox}
         />
+        <Text style={GlobalStyles.regularText}>Last Name</Text>
         <TextInput
           placeholder="Enter your last name..."
           onChangeText={(last_name) => this.setState({ last_name })}
           value={this.state.last_name}
           style={GlobalStyles.userDataTextBox}
         />
+        <Text style={GlobalStyles.regularText}>Email</Text>
         <TextInput
           placeholder="Enter your email..."
           onChangeText={(email) => this.setState({ email })}
           value={this.state.email}
           style={GlobalStyles.userDataTextBox}
         />
+        <Text style={GlobalStyles.regularText}>Password</Text>
         <TextInput
           placeholder="Enter your password..."
           onChangeText={(password) => this.setState({ password })}
@@ -74,7 +103,16 @@ class SignupScreen extends Component {
           secureTextEntry
           style={GlobalStyles.userDataTextBox}
         />
-        <Button title="Create an account" onPress={() => this.signup()} />
+        <Text style={GlobalStyles.regularText}>Confirm Password</Text>
+        <TextInput
+          placeholder="Confirm password..."
+          onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
+          value={this.state.confirmPassword}
+          secureTextEntry
+          style={GlobalStyles.userDataTextBox}
+        />
+        {this.checkInvalidInput()}
+        <Button title="Create an account" onPress={() => this.formValidation()} />
         <Button
           onPress={() => this.props.navigation.navigate("Login")}
           color="darkblue"

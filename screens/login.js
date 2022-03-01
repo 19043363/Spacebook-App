@@ -51,7 +51,6 @@ class LoginScreen extends Component {
   };
 
   checkInvalidInput(){
-
     if (this.state.checkInvalidInput === true){
       return <Text style={GlobalStyles.errorText}>Invalid email/password supplied </Text>
     }
@@ -63,6 +62,7 @@ class LoginScreen extends Component {
       <ScrollView>
         <Text style={GlobalStyles.headerText}>Login</Text>
 
+        <Text style={GlobalStyles.regularText}>Email</Text>
         <TextInput
           placeholder="Enter your email..."
           onChangeText={(email) => this.setState({ email })}
@@ -70,6 +70,7 @@ class LoginScreen extends Component {
           style={GlobalStyles.userDataTextBox}
         />
 
+        <Text style={GlobalStyles.regularText}>Password</Text>
         <TextInput
           placeholder="Enter your password..."
           onChangeText={(password) => this.setState({ password })}

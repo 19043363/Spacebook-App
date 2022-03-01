@@ -16,7 +16,8 @@ export default StyleSheet.create({
 
     regularText: {
         fontSize: 16,
-        padding: 5,
+        paddingLeft: 5,
+        paddingRight: 5,
         margin: 5,
     },
 
