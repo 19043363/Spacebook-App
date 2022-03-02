@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Button, View, Text, TextInput } from "react-native";
+import { Button, ScrollView, View, Text, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText } from "../styles/styles";
 
 class EditProfileScreen extends Component {
   constructor(props) {
@@ -149,13 +150,13 @@ class EditProfileScreen extends Component {
   checkInvalidInput() {
     if (this.state.differentPasswords === true) {
       return (
-        <Text style={GlobalStyles.errorText}>Passwords do not match.</Text>
+        <ErrorText style={GlobalStyles.errorText}>Passwords do not match.</ErrorText>
       );
     } else if (this.state.invalidEmailOrPassword === true) {
       return (
-        <Text style={GlobalStyles.errorText}>
+        <ErrorText style={GlobalStyles.errorText}>
           Email must be valid and password must be greater than 5 characters.
-        </Text>
+        </ErrorText>
       );
     }
     return null;
@@ -171,51 +172,46 @@ class EditProfileScreen extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={GlobalStyles.loading}>
-          <Text>Loading..</Text>
-        </View>
+        <LoadingView>
+          <BodyText>Loading..</BodyText>
+        </LoadingView>
       );
     } else {
       return (
-        <View>
-          <Text style={GlobalStyles.headerText}>Edit Profile</Text>
+        <ScrollView>
+          <Subtitle>Edit Profile</Subtitle>
 
-          <Text style={GlobalStyles.regularText}>First Name</Text>
-          <TextInput
-            style={GlobalStyles.regularText}
+          <BodyText>First Name</BodyText>
+          <InputTextBox
             placeholder={this.state.origFirstName}
             onChangeText={(firstName) => this.setState({ firstName })}
             value={this.state.firstName}
           />
 
-          <Text style={GlobalStyles.regularText}>Last Name</Text>
-          <TextInput
-            style={GlobalStyles.regularText}
+          <BodyText>Last Name</BodyText>
+          <InputTextBox
             placeholder={this.state.origLastName}
             onChangeText={(lastName) => this.setState({ lastName })}
             value={this.state.lastName}
           />
 
-          <Text style={GlobalStyles.regularText}>Email</Text>
-          <TextInput
-            style={GlobalStyles.regularText}
+          <BodyText>Email</BodyText>
+          <InputTextBox
             placeholder={this.state.origEmail}
             onChangeText={(email) => this.setState({ email })}
             value={this.state.email}
           />
 
-          <Text style={GlobalStyles.regularText}>Password</Text>
-          <TextInput
-            style={GlobalStyles.regularText}
+          <BodyText>Password</BodyText>
+          <InputTextBox
             placeholder={"New Password"}
             secureTextEntry
             onChangeText={(password) => this.setState({ password })}
             value={this.state.password}
           />
 
-          <Text style={GlobalStyles.regularText}>Confirm Password</Text>
-          <TextInput
-            style={GlobalStyles.regularText}
+          <BodyText>Confirm Password</BodyText>
+          <InputTextBox
             placeholder={"Confirm Password"}
             secureTextEntry
             onChangeText={(confirmPassword) =>
@@ -225,7 +221,7 @@ class EditProfileScreen extends Component {
           />
           {this.checkInvalidInput()}
           <Button title="Update" onPress={() => this.formValidation()} />
-        </View>
+        </ScrollView>
       );
     }
   }

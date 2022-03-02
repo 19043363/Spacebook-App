@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Text, ScrollView, Button } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText } from "../styles/styles";
 
 class LogoutScreen extends Component {
   constructor(props) {
@@ -60,12 +60,12 @@ class LogoutScreen extends Component {
   render() {
     return (
       <ScrollView>
-        <Text style={GlobalStyles.headerText}>
+        <Subtitle>
           If you leave me now, you'll take away the biggest part of me...
-        </Text>
-        <Text style={GlobalStyles.headerText}>
+        </Subtitle>
+        <Subtitle>
           ...Oooooohh, please don't go!
-        </Text>
+        </Subtitle>
         <Button title="I'm outta here" onPress={() => this.logout()} />
         <Button
           title="OK, take me home, country roads"

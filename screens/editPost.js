@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Button, View, Text, TextInput } from "react-native";
+import { Button, ScrollView, View, Text, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, InputPostTextBox, LoadingView } from "../styles/styles";
 
 class EditProfileScreen extends Component {
   constructor(props) {
@@ -124,16 +124,15 @@ class EditProfileScreen extends Component {
 
     if (this.state.isLoading) {
       return (
-        <View style={GlobalStyles.loading}>
-          <Text>Loading..</Text>
-        </View>
+        <LoadingView>
+          <BodyText>Loading..</BodyText>
+        </LoadingView>
       );
     } else {
       return (
-        <View>
-          <Text style={GlobalStyles.headerText}>Edit Post</Text>
-          <TextInput
-            style={GlobalStyles.postTextInput}
+        <ScrollView>
+          <Subtitle>Edit Post</Subtitle>
+          <InputPostTextBox
             placeholder={"Edit your Post"}
             multiline={true}
             onChangeText={(text) => this.setState({ text })}
@@ -146,7 +145,7 @@ class EditProfileScreen extends Component {
             title="Return to Home"
             onPress={() => this.props.navigation.navigate("Home")}
           />
-        </View>
+        </ScrollView>
       );
     }
   }

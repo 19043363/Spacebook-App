@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, InputPostTextBox, PostTextBox, LoadingView } from "../styles/styles";
 
 class FriendProfileScreen extends Component {
   constructor(props) {
@@ -262,21 +263,28 @@ class FriendProfileScreen extends Component {
 
     if (this.state.isLoading) {
       return (
-        <View style={GlobalStyles.loading}>
-          <Text>Loading..</Text>
-        </View>
+        <LoadingView>
+          <BodyText>Loading..</BodyText>
+        </LoadingView>
       );
     } else {
       return (
         <ScrollView>
-          <Text style={GlobalStyles.headerText}>Friend Profile</Text>
-
-          <Image
-            source={{
-              uri: this.state.userPhoto,
-            }}
-            style={GlobalStyles.profilePhoto}
-          />
+          <Subtitle>Friend Profile</Subtitle>
+          
+          <View style={GlobalStyles.contentDirection}>
+            <Image
+              source={{
+                uri: this.state.userPhoto,
+              }}
+              style={GlobalStyles.profilePhoto}
+            />
+            <BodyText>
+              {this.state.firstName} {this.state.lastName} {"\n"}
+              {this.state.email} {"\n"}
+              Friends: {this.state.friendCount}
+            </BodyText>
+          </View>
 
           <Button
             title="Friends"
@@ -287,14 +295,7 @@ class FriendProfileScreen extends Component {
             }
           />
 
-          <Text style={GlobalStyles.regularText}>
-            {this.state.firstName} {this.state.lastName} {"\n"}
-            {this.state.email} {"\n"}
-            Friends: {this.state.friendCount}
-          </Text>
-
-          <TextInput
-            style={GlobalStyles.postTextInput}
+          <InputPostTextBox
             placeholder="Post on your friend's wall!"
             multiline={true}
             onChangeText={(text) => this.setState({ text })}
@@ -311,7 +312,7 @@ class FriendProfileScreen extends Component {
             data={this.state.postData}
             renderItem={({ item }) => (
               <View>
-                <Text style={GlobalStyles.postText}>{item.text} </Text>
+                <PostTextBox>{item.text} </PostTextBox>
                 <Button
                   title={"Like"}
                   color="pink"
@@ -322,11 +323,11 @@ class FriendProfileScreen extends Component {
                   color="firebrick"
                   onPress={() => this.removeLikeFromFriendPost(item.post_id)}
                 />
-                <Text style={GlobalStyles.regularText}>
+                <BodyText>
                   {item.author.first_name} {item.author.last_name}
                   {"\n"}
                   {item.numLikes} Likes{" "}
-                </Text>
+                </BodyText>
               </View>
             )}
             keyExtractor={(item, index) => item.post_id.toString()}

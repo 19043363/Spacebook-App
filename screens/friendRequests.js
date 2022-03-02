@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { Button, View, Text, FlatList } from "react-native";
+import { Button, ScrollView, View, Text, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
 
 class FriendRequestsScreen extends Component {
   constructor(props) {
@@ -129,14 +130,14 @@ class FriendRequestsScreen extends Component {
 
     if (this.state.isLoading) {
       return (
-        <View style={GlobalStyles.loading}>
-          <Text>Loading..</Text>
-        </View>
+        <LoadingView>
+          <BodyText>Loading..</BodyText>
+        </LoadingView>
       );
     } else {
       return (
-        <View>
-          <Text style={GlobalStyles.headerText}>Friends Requests</Text>
+        <ScrollView>
+          <Subtitle>Friends Requests</Subtitle>
           <FlatList
             data={this.state.friendRequestData}
             renderItem={({ item }) => (
@@ -156,7 +157,7 @@ class FriendRequestsScreen extends Component {
             )}
             keyExtractor={(item, index) => item.user_id.toString()}
           />
-        </View>
+        </ScrollView>
       );
     }
   }

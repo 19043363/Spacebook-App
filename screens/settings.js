@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Button, View, Text } from "react-native";
+import { Button, ScrollView, View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
 
 class FriendRequestsScreen extends Component {
   constructor(props) {
@@ -41,18 +41,18 @@ class FriendRequestsScreen extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={GlobalStyles.loading}>
-          <Text>Loading..</Text>
-        </View>
+        <LoadingView>
+          <BodyText>Loading..</BodyText>
+        </LoadingView>
       );
     } else {
       return (
-        <View>
+        <ScrollView>
           <Button
             title="Edit Profile"
             onPress={() => this.props.navigation.navigate("Edit Profile")}
           />
-        </View>
+        </ScrollView>
       );
     }
   }

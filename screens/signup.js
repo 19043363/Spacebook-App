@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Button, ScrollView, TextInput, Text } from "react-native";
-import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
 
 class SignupScreen extends Component {
   constructor(props) {
@@ -19,8 +19,6 @@ class SignupScreen extends Component {
   }
 
   signup = () => {
-    //Validation here...
-
     return fetch("http://localhost:3333/api/1.0.0/user", {
       method: "post",
       headers: {
@@ -66,12 +64,12 @@ class SignupScreen extends Component {
 
   checkInvalidInput() {
     if (this.state.differentPasswords === true) {
-      return <Text style={GlobalStyles.errorText}>Passwords do not match.</Text>;
+      return <ErrorText>Passwords do not match.</ErrorText>;
     } else if (this.state.invalidEmailOrPassword === true) {
       return (
-        <Text style={GlobalStyles.errorText}>
+        <ErrorText>
           Email must be valid and password must be greater than 5 characters.
-        </Text>
+        </ErrorText>
       );
     }
     return null;
@@ -80,45 +78,40 @@ class SignupScreen extends Component {
   render() {
     return (
       <ScrollView>
-        <Text style={GlobalStyles.headerText}>Sign up</Text>
-        <Text style={GlobalStyles.headerText}>Welcome to Spacebook!</Text>
+        <Title>Sign up</Title>
+        <Subtitle>Welcome to Spacebook!</Subtitle>
 
-        <Text style={GlobalStyles.regularText}>First Name</Text>
-        <TextInput
+        <BodyText>First Name</BodyText>
+        <InputTextBox
           placeholder="Enter your first name..."
           onChangeText={(first_name) => this.setState({ first_name })}
           value={this.state.first_name}
-          style={GlobalStyles.userDataTextBox}
         />
-        <Text style={GlobalStyles.regularText}>Last Name</Text>
-        <TextInput
+        <BodyText>Last Name</BodyText>
+        <InputTextBox
           placeholder="Enter your last name..."
           onChangeText={(last_name) => this.setState({ last_name })}
           value={this.state.last_name}
-          style={GlobalStyles.userDataTextBox}
         />
-        <Text style={GlobalStyles.regularText}>Email</Text>
-        <TextInput
+        <BodyText>Email</BodyText>
+        <InputTextBox
           placeholder="Enter your email..."
           onChangeText={(email) => this.setState({ email })}
           value={this.state.email}
-          style={GlobalStyles.userDataTextBox}
         />
-        <Text style={GlobalStyles.regularText}>Password</Text>
-        <TextInput
+        <BodyText>Password</BodyText>
+        <InputTextBox
           placeholder="Enter your password..."
           onChangeText={(password) => this.setState({ password })}
           value={this.state.password}
           secureTextEntry
-          style={GlobalStyles.userDataTextBox}
         />
-        <Text style={GlobalStyles.regularText}>Confirm Password</Text>
-        <TextInput
+        <BodyText>Confirm Password</BodyText>
+        <InputTextBox
           placeholder="Confirm password..."
           onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
           value={this.state.confirmPassword}
           secureTextEntry
-          style={GlobalStyles.userDataTextBox}
         />
         {this.checkInvalidInput()}
         <Button

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import { Button, Text } from "react-native";
-import { ScrollView, TextInput } from "react-native-gesture-handler";
+import { Button } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalStyles from "../styles/globalStyles";
+import { Title, BodyText, InputTextBox, ErrorText } from "../styles/styles";
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -52,7 +52,7 @@ class LoginScreen extends Component {
 
   checkInvalidInput(){
     if (this.state.checkInvalidInput === true){
-      return <Text style={GlobalStyles.errorText}>Invalid email/password supplied </Text>
+      return <ErrorText>Invalid email/password supplied </ErrorText>
     }
     return null;
   }
@@ -60,23 +60,21 @@ class LoginScreen extends Component {
   render() {
     return (
       <ScrollView>
-        <Text style={GlobalStyles.headerText}>Login</Text>
+        <Title>Login</Title>
 
-        <Text style={GlobalStyles.regularText}>Email</Text>
-        <TextInput
+        <BodyText>Email</BodyText>
+        <InputTextBox
           placeholder="Enter your email..."
           onChangeText={(email) => this.setState({ email })}
           value={this.state.email}
-          style={GlobalStyles.userDataTextBox}
         />
 
-        <Text style={GlobalStyles.regularText}>Password</Text>
-        <TextInput
+        <BodyText>Password</BodyText>
+        <InputTextBox
           placeholder="Enter your password..."
           onChangeText={(password) => this.setState({ password })}
           value={this.state.password}
           secureTextEntry
-          style={GlobalStyles.userDataTextBox}
         />
 
         {this.checkInvalidInput()}

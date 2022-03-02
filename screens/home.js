@@ -9,9 +9,11 @@ import {
   FlatList,
   ScrollView,
 } from "react-native";
+
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, PostTextBox, LoadingView } from "../styles/styles";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -249,14 +251,14 @@ class HomeScreen extends Component {
 
     if (this.state.isLoading) {
       return (
-        <View style={GlobalStyles.loading}>
-          <Text>Loading..</Text>
-        </View>
+        <LoadingView>
+          <BodyText>Loading..</BodyText>
+        </LoadingView>
       );
     } else {
       return (
-        <ScrollView horizontal={false}>
-
+        <ScrollView>
+          <View style={GlobalStyles.contentDirection}>
           <Image
             source={{
               uri: this.state.userPhoto,
@@ -264,11 +266,12 @@ class HomeScreen extends Component {
             style={GlobalStyles.profilePhoto}
           />
 
-          <Text style={GlobalStyles.regularText}>
+          <BodyText>
             {this.state.firstName} {this.state.lastName} {"\n"}
             {this.state.email} {"\n"}
             Friends: {this.state.friendCount}
-          </Text>
+          </BodyText>
+          </View>
 
           <Button title="Friends" onPress={() => nav.navigate("Friends")} />
 
@@ -306,22 +309,22 @@ class HomeScreen extends Component {
             data={this.state.postData}
             renderItem={({ item }) => (
               <View>
-                <Text style={GlobalStyles.postText}>{item.text} </Text>
+                <PostTextBox>{item.text} </PostTextBox>
 
-                <View style={{ flexDirection: "row" }}>
+                <View style={GlobalStyles.contentDirection}>
 
-                  <Text style={GlobalStyles.regularText}>
+                  <BodyText>
                     {item.author.first_name} {item.author.last_name}
                     {"\n"}
                     {item.numLikes} Likes{" "}
-                  </Text>
+                  </BodyText>
 
                   <TouchableOpacity
                     style={GlobalStyles.button}
                     onPress={() => this.removePost(item.post_id)}
                   >
                     <View>
-                      <Ionicons
+                      <Ionicons 
                         name={"trash-bin"}
                         size={buttonSize}
                         color={"black"}

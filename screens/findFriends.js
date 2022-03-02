@@ -1,7 +1,14 @@
 import React, { Component } from "react";
-import { Button, View, Text, TextInput, FlatList } from "react-native";
+import {
+  Button,
+  ScrollView,
+  View,
+  Text,
+  TextInput,
+  FlatList,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalStyles from "../styles/globalStyles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, InputPostTextBox, LoadingView } from "../styles/styles";
 
 class FindFriendsScreen extends Component {
   constructor(props) {
@@ -139,16 +146,15 @@ class FindFriendsScreen extends Component {
   render() {
     if (this.state.isLoading) {
       return (
-        <View style={GlobalStyles.loading}>
-          <Text>Loading..</Text>
-        </View>
+        <LoadingView>
+          <BodyText>Loading..</BodyText>
+        </LoadingView>
       );
     } else {
       return (
-        <View>
-          <Text style={GlobalStyles.headerText}>Find Friends Placeholder</Text>
-          <TextInput
-            style={GlobalStyles.regularText}
+        <ScrollView>
+          <Subtitle>Find Friends Placeholder</Subtitle>
+          <InputTextBox
             placeholder="Search for Friends"
             onChangeText={(friendSearch) => this.setState({ friendSearch })}
             value={this.state.friendSearch}
@@ -192,7 +198,7 @@ class FindFriendsScreen extends Component {
             color="darkblue"
             onPress={() => this.getNextSearchPage()}
           />
-        </View>
+        </ScrollView>
       );
     }
   }
