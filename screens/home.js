@@ -3,23 +3,28 @@ import {
   Button,
   View,
   TouchableOpacity,
+  Text,
   FlatList,
   ScrollView,
+  StyleSheet,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalStyles from "../styles/globalStyles";
 import {
+  Container,
   BodyText,
   PostTextBox,
   LoadingView,
   ProfilePhoto,
   ProfileContainer,
-  PostInfoContainer,
   InputPostTextBox,
-  PostInteractionButton,
-  PostButtonContainer,
+  DeletePostButton,
+  EditPostButton,
+  PostButton,
+  ButtonText,
+  LikePostButton,
 } from "../styles/styles";
 
 class HomeScreen extends Component {
@@ -265,6 +270,7 @@ class HomeScreen extends Component {
     } else {
       return (
         <ScrollView>
+          <Container>
           <ProfileContainer>
             <ProfilePhoto
               source={{
@@ -304,59 +310,58 @@ class HomeScreen extends Component {
             value={this.state.text}
           />
 
-          <Button
-            title="Post"
-            color="darkblue"
-            onPress={() => this.addPost()}
-          />
+          <View style={{ alignSelf: "stretch", padding: 5 }}>
+            <PostButton onPress={() => this.addPost()}>
+              <ButtonText style={{ alignSelf: "center" }}>Post</ButtonText>
+            </PostButton>
+          </View>
 
           <FlatList
             data={this.state.postData}
             renderItem={({ item }) => (
               <View>
-                
                 <PostTextBox>{item.text} </PostTextBox>
-                <PostButtonContainer>
-                <PostInteractionButton
-                    onPress={() => this.removePost(item.post_id)}
-                  >
-                    <View>
-                      <Ionicons
-                        name={"trash-bin"}
-                        size={buttonSize}
-                        color={"black"}
-                      />
-                    </View>
-                  </PostInteractionButton>
 
-                  <PostInteractionButton
-                    onPress={() =>
-                      nav.navigate("Edit Post", { post_id: item.post_id })
-                    }
-                  >
-                    <View>
-                      <Ionicons
-                        name={"create-outline"}
-                        size={buttonSize}
-                        color={"black"}
-                      />
-                    </View>
-                  </PostInteractionButton>
-                  </PostButtonContainer>
-                <PostInfoContainer>
-                
+                  <View style={{flexDirection: "row", justifyContent: "space-between"}}>
                   <BodyText>
                     {item.author.first_name} {item.author.last_name}
                     {"\n"}
                     {item.numLikes} Likes{" "}
                   </BodyText>
 
+                    <View style={{flexDirection: "row",}}>
+                      <DeletePostButton
+                        onPress={() => this.removePost(item.post_id)}
+                      >
+                        <View>
+                          <Ionicons
+                            name={"trash-bin"}
+                            size={buttonSize}
+                            color={"black"}
+                          />
+                        </View>
+                      </DeletePostButton>
 
-                  </PostInfoContainer>
+                      <EditPostButton
+                        onPress={() =>
+                          nav.navigate("Edit Post", { post_id: item.post_id })
+                        }
+                      >
+                        <View>
+                          <Ionicons
+                            name={"create-outline"}
+                            size={buttonSize}
+                            color={"black"}
+                          />
+                        </View>
+                      </EditPostButton>
+                    </View>
+                  </View>
               </View>
             )}
             keyExtractor={(item, index) => item.post_id.toString()}
           />
+          </Container>
         </ScrollView>
       );
     }
@@ -364,3 +369,11 @@ class HomeScreen extends Component {
 }
 
 export default HomeScreen;
+
+const styles = StyleSheet.create({
+  button: {
+    alignItems: "center",
+    backgroundColor: "#DDDDDD",
+    padding: 10,
+  },
+});

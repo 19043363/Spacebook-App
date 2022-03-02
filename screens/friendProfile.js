@@ -1,13 +1,5 @@
 import React, { Component } from "react";
-import {
-  Button,
-  Image,
-  View,
-  ScrollView,
-  Text,
-  TextInput,
-  FlatList,
-} from "react-native";
+import { Button, View, ScrollView, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {
@@ -23,8 +15,10 @@ import {
   ProfileContainer,
   PostInfoContainer,
   PostButtonContainer,
-  PostInteractionButton,
-  LikePostButton
+  LikePostButton,
+  RemoveLikePostButton,
+  PostButton,
+  ButtonText,
 } from "../styles/styles";
 
 class FriendProfileScreen extends Component {
@@ -338,53 +332,53 @@ class FriendProfileScreen extends Component {
             value={this.state.text}
           />
 
-          <Button
-            title="Post"
-            color="darkblue"
-            onPress={() => this.postAddPost()}
-          />
+          <View style={{ alignSelf: "stretch", padding: 5 }}>
+            <PostButton onPress={() => this.addPost()}>
+              <ButtonText style={{ alignSelf: "center" }}>Post</ButtonText>
+            </PostButton>
+          </View>
 
           <FlatList
             data={this.state.postData}
             renderItem={({ item }) => (
               <View>
                 <PostTextBox>{item.text} </PostTextBox>
-                <PostButtonContainer>
-                <LikePostButton
-                    onPress={() => this.likeFriendPost(item.post_id)}
-                  >
-                    <View>
-                      <Ionicons
-                        name={"heart"}
-                        size={buttonSize}
-                        color={"firebrick"}
-                      />
-                    </View>
-                  </LikePostButton>
 
-                  <PostInteractionButton
-                    onPress={() => this.removeLikeFromFriendPost(item.post_id)}
-                  >
-                    <View>
-                      <Ionicons
-                        name={"heart-dislike"}
-                        size={buttonSize}
-                        color={"black"}
-                      />
-                    </View>
-                  </PostInteractionButton>
-
-                  </PostButtonContainer>
-
-
-                <PostInfoContainer>
+                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
                   <BodyText>
                     {item.author.first_name} {item.author.last_name}
                     {"\n"}
                     {item.numLikes} Likes{" "}
                   </BodyText>
-                  
-                </PostInfoContainer>
+
+                  <View style={{ flexDirection: "row"}}>
+                    <LikePostButton
+                      onPress={() => this.likeFriendPost(item.post_id)}
+                    >
+                      <View>
+                        <Ionicons
+                          name={"heart"}
+                          size={buttonSize}
+                          color={"firebrick"}
+                        />
+                      </View>
+                    </LikePostButton>
+
+                    <RemoveLikePostButton
+                      onPress={() =>
+                        this.removeLikeFromFriendPost(item.post_id)
+                      }
+                    >
+                      <View>
+                        <Ionicons
+                          name={"heart-dislike"}
+                          size={buttonSize}
+                          color={"black"}
+                        />
+                      </View>
+                    </RemoveLikePostButton>
+                  </View>
+                </View>
               </View>
             )}
             keyExtractor={(item, index) => item.post_id.toString()}

@@ -1,55 +1,62 @@
 import styled from "styled-components/native";
 
+export const Container = styled.View `
+  margin: 10px;
+`;
+
 export const Title = styled.Text `
-  fontSize: 24;
+  fontSize: 24px;
   padding: 5px;
   margin: 5px;
 `;
 
 export const Subtitle = styled.Text `
-fontSize: 20;
+  fontSize: 20px;
   paddingLeft: 5px;
   paddingRight: 5px;
   margin: 5px;
 `;
 
 export const BodyText = styled.Text `
-fontSize: 16;
+  fontSize: 16px;
   paddingLeft: 5px;
   paddingRight: 5px;
   margin: 5px;
 `;
 
 export const ErrorText = styled.Text `
-  fontSize: 14;
+  fontSize: 14px;
   color: red;
   padding: 5px;
   margin: 5px;
 `;
 
 export const InputTextBox = styled.TextInput `
-  fontSize: 14;
-  borderWidth: 1;
+  fontSize: 14px;
+  borderWidth: 1px;
   padding: 5px;
   margin: 5px;
+  borderRadius: 5px;
 `;
 
 export const InputPostTextBox = styled.TextInput `
-  fontSize: 14;
-  borderWidth: 1;
+  fontSize: 14px;
+  borderWidth: 1px;
   padding: 5px;
-  margin: 5px;
-  height: 60;
-  borderRadius: 3px;
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  height: 60px;
+  borderRadius: 5px;
 `;
 
 export const PostTextBox = styled.Text `
-  fontSize: 14;
+  fontSize: 14px;
   padding: 5px;
   margin: 5px;
   borderColor: black;
-  borderWidth: 1;
-  borderRadius: 3px;
+  borderWidth: 1px;
+  borderRadius: 5px;
 `;
 
 export const LoadingView = styled.View `
@@ -61,11 +68,6 @@ export const LoadingView = styled.View `
 
 export const ProfileContainer = styled.View `
   alignItems: center;
-  flexDirection: row;
-`;
-
-export const PostInfoContainer = styled.View `
-  display: flex;
   flexDirection: row;
 `;
 
@@ -95,21 +97,38 @@ export const TakePhotoButton = styled.TouchableOpacity `
 `;
 
 export const TakePhotoText = styled.Text `
-  fontSize: 18;
+  fontSize: 18px;
   color: white;
 `;
 
-export const PostInteractionButton = styled.TouchableOpacity `
+export const DeletePostButton = styled.TouchableOpacity `
+  backgroundColor: transparent;
+  padding: 5px;
+`;
+
+export const EditPostButton = styled.TouchableOpacity `
   backgroundColor: transparent;
   padding: 5px;
 `;
 
 export const LikePostButton = styled.TouchableOpacity `
   backgroundColor: transparent;
-  color: red;
   padding: 5px;
 `;
 
-export const PostButtonContainer = styled.View `
-  flexDirection: row;
+export const RemoveLikePostButton = styled.TouchableOpacity `
+  backgroundColor: transparent;
+  padding: 5px;
+`;
+
+export const PostButton = styled.TouchableOpacity `
+  backgroundColor: teal;
+  borderRadius: 8px;
+  padding: 5px;
+`;
+
+
+export const ButtonText = styled.Text `
+  fontSize: 16px;
+  color: white;
 `;
