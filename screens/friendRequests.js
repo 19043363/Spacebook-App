@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Button, ScrollView, View, Text, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalStyles from "../styles/globalStyles";
 import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
 
 class FriendRequestsScreen extends Component {

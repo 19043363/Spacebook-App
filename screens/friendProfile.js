@@ -9,8 +9,23 @@ import {
   FlatList,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalStyles from "../styles/globalStyles";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, InputPostTextBox, PostTextBox, LoadingView } from "../styles/styles";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import {
+  Title,
+  Subtitle,
+  BodyText,
+  InputTextBox,
+  ErrorText,
+  InputPostTextBox,
+  PostTextBox,
+  LoadingView,
+  ProfilePhoto,
+  ProfileContainer,
+  PostInfoContainer,
+  PostButtonContainer,
+  PostInteractionButton,
+  LikePostButton
+} from "../styles/styles";
 
 class FriendProfileScreen extends Component {
   constructor(props) {
@@ -58,6 +73,11 @@ class FriendProfileScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -119,8 +139,13 @@ class FriendProfileScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
         } else if (response.status === 403) {
           throw "Can only view the posts of yourself or your friends";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -156,11 +181,17 @@ class FriendProfileScreen extends Component {
     )
       .then((response) => {
         if (response.status === 200) {
+          this.getFriendPostData();
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
         } else if (response.status === 403) {
           throw "You have already liked this post";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -195,11 +226,17 @@ class FriendProfileScreen extends Component {
     )
       .then((response) => {
         if (response.status === 200) {
+          this.getFriendPostData();
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
         } else if (response.status === 403) {
           throw "You have not liked this post";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
         } else {
           throw "Something went wrong";
         }
@@ -232,9 +269,11 @@ class FriendProfileScreen extends Component {
     })
       .then((response) => {
         if (response.status === 201) {
+          this.getFriendPostData();
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
         } else {
           throw "Something went wrong";
         }
@@ -258,7 +297,7 @@ class FriendProfileScreen extends Component {
 
   render() {
     const nav = this.props.navigation;
-
+    const buttonSize = 28;
     const { user_id } = this.props.route.params;
 
     if (this.state.isLoading) {
@@ -270,21 +309,18 @@ class FriendProfileScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <Subtitle>Friend Profile</Subtitle>
-          
-          <View style={GlobalStyles.contentDirection}>
-            <Image
+          <ProfileContainer>
+            <ProfilePhoto
               source={{
                 uri: this.state.userPhoto,
               }}
-              style={GlobalStyles.profilePhoto}
             />
             <BodyText>
               {this.state.firstName} {this.state.lastName} {"\n"}
               {this.state.email} {"\n"}
               Friends: {this.state.friendCount}
             </BodyText>
-          </View>
+          </ProfileContainer>
 
           <Button
             title="Friends"
@@ -313,21 +349,42 @@ class FriendProfileScreen extends Component {
             renderItem={({ item }) => (
               <View>
                 <PostTextBox>{item.text} </PostTextBox>
-                <Button
-                  title={"Like"}
-                  color="pink"
-                  onPress={() => this.likeFriendPost(item.post_id)}
-                />
-                <Button
-                  title={"Remove Like"}
-                  color="firebrick"
-                  onPress={() => this.removeLikeFromFriendPost(item.post_id)}
-                />
-                <BodyText>
-                  {item.author.first_name} {item.author.last_name}
-                  {"\n"}
-                  {item.numLikes} Likes{" "}
-                </BodyText>
+                <PostButtonContainer>
+                <LikePostButton
+                    onPress={() => this.likeFriendPost(item.post_id)}
+                  >
+                    <View>
+                      <Ionicons
+                        name={"heart"}
+                        size={buttonSize}
+                        color={"firebrick"}
+                      />
+                    </View>
+                  </LikePostButton>
+
+                  <PostInteractionButton
+                    onPress={() => this.removeLikeFromFriendPost(item.post_id)}
+                  >
+                    <View>
+                      <Ionicons
+                        name={"heart-dislike"}
+                        size={buttonSize}
+                        color={"black"}
+                      />
+                    </View>
+                  </PostInteractionButton>
+
+                  </PostButtonContainer>
+
+
+                <PostInfoContainer>
+                  <BodyText>
+                    {item.author.first_name} {item.author.last_name}
+                    {"\n"}
+                    {item.numLikes} Likes{" "}
+                  </BodyText>
+                  
+                </PostInfoContainer>
               </View>
             )}
             keyExtractor={(item, index) => item.post_id.toString()}

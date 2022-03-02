@@ -60,6 +60,7 @@ class FindFriendsScreen extends Component {
           throw "Bad request";
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
         } else {
           throw "Something went wrong";
         }
@@ -94,6 +95,7 @@ class FindFriendsScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
         } else if (response.status === 403) {
           throw "User is already added as a friend";
         } else {

@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import {
   Button,
-  Image,
   View,
-  Text,
-  TextInput,
   TouchableOpacity,
   FlatList,
   ScrollView,
@@ -13,7 +10,17 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import GlobalStyles from "../styles/globalStyles";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, PostTextBox, LoadingView } from "../styles/styles";
+import {
+  BodyText,
+  PostTextBox,
+  LoadingView,
+  ProfilePhoto,
+  ProfileContainer,
+  PostInfoContainer,
+  InputPostTextBox,
+  PostInteractionButton,
+  PostButtonContainer,
+} from "../styles/styles";
 
 class HomeScreen extends Component {
   constructor(props) {
@@ -62,7 +69,7 @@ class HomeScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
-          throw "Unauthorised";
+          throw "Unauthorized";
         } else if (response.status === 404) {
           throw "Not found";
         } else {
@@ -102,7 +109,7 @@ class HomeScreen extends Component {
           throw "Bad request";
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
-          throw "Unauthorised";
+          throw "Unauthorized";
         } else if (response.status === 404) {
           throw "Not found";
         } else if (response.status === 500) {
@@ -145,7 +152,7 @@ class HomeScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
-          throw "Unauthorised";
+          throw "Unauthorized";
         } else if (response.status === 404) {
           throw "Not found";
         } else if (response.status === 500) {
@@ -180,7 +187,7 @@ class HomeScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
-          throw "Unauthorised";
+          throw "Unauthorized";
         } else if (response.status === 403) {
           throw "Can only view the posts of yourself or your friends";
         } else if (response.status === 404) {
@@ -222,7 +229,7 @@ class HomeScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
-          throw "Unauthorised";
+          throw "Unauthorized";
         } else if (response.status === 403) {
           throw "You can only delete your own posts";
         } else if (response.status === 404) {
@@ -258,20 +265,19 @@ class HomeScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <View style={GlobalStyles.contentDirection}>
-          <Image
-            source={{
-              uri: this.state.userPhoto,
-            }}
-            style={GlobalStyles.profilePhoto}
-          />
+          <ProfileContainer>
+            <ProfilePhoto
+              source={{
+                uri: this.state.userPhoto,
+              }}
+            />
 
-          <BodyText>
-            {this.state.firstName} {this.state.lastName} {"\n"}
-            {this.state.email} {"\n"}
-            Friends: {this.state.friendCount}
-          </BodyText>
-          </View>
+            <BodyText>
+              {this.state.firstName} {this.state.lastName} {"\n"}
+              {this.state.email} {"\n"}
+              Friends: {this.state.friendCount}
+            </BodyText>
+          </ProfileContainer>
 
           <Button title="Friends" onPress={() => nav.navigate("Friends")} />
 
@@ -291,8 +297,7 @@ class HomeScreen extends Component {
             onPress={() => this.props.navigation.navigate("Logout")}
           />
 
-          <TextInput
-            style={GlobalStyles.postTextInput}
+          <InputPostTextBox
             placeholder="What's on your mind today?"
             multiline={true}
             onChangeText={(text) => this.setState({ text })}
@@ -309,31 +314,22 @@ class HomeScreen extends Component {
             data={this.state.postData}
             renderItem={({ item }) => (
               <View>
+                
                 <PostTextBox>{item.text} </PostTextBox>
-
-                <View style={GlobalStyles.contentDirection}>
-
-                  <BodyText>
-                    {item.author.first_name} {item.author.last_name}
-                    {"\n"}
-                    {item.numLikes} Likes{" "}
-                  </BodyText>
-
-                  <TouchableOpacity
-                    style={GlobalStyles.button}
+                <PostButtonContainer>
+                <PostInteractionButton
                     onPress={() => this.removePost(item.post_id)}
                   >
                     <View>
-                      <Ionicons 
+                      <Ionicons
                         name={"trash-bin"}
                         size={buttonSize}
                         color={"black"}
                       />
                     </View>
-                  </TouchableOpacity>
+                  </PostInteractionButton>
 
-                  <TouchableOpacity
-                    style={GlobalStyles.button}
+                  <PostInteractionButton
                     onPress={() =>
                       nav.navigate("Edit Post", { post_id: item.post_id })
                     }
@@ -345,9 +341,18 @@ class HomeScreen extends Component {
                         color={"black"}
                       />
                     </View>
-                  </TouchableOpacity>
+                  </PostInteractionButton>
+                  </PostButtonContainer>
+                <PostInfoContainer>
+                
+                  <BodyText>
+                    {item.author.first_name} {item.author.last_name}
+                    {"\n"}
+                    {item.numLikes} Likes{" "}
+                  </BodyText>
 
-                </View>
+
+                  </PostInfoContainer>
               </View>
             )}
             keyExtractor={(item, index) => item.post_id.toString()}

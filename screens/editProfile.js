@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Button, ScrollView, View, Text, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import GlobalStyles from "../styles/globalStyles";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText } from "../styles/styles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
 
 class EditProfileScreen extends Component {
   constructor(props) {
@@ -51,6 +50,7 @@ class EditProfileScreen extends Component {
           return response.json();
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
         } else if (response.status === 404) {
           throw "Not found";
         } else if (response.status === 500) {
@@ -119,6 +119,7 @@ class EditProfileScreen extends Component {
           throw "Bad request";
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
+          throw "Unauthorized";
         } else if (response.status === 403) {
           throw "Forbidden";
         } else if (response.status === 404) {
@@ -150,11 +151,11 @@ class EditProfileScreen extends Component {
   checkInvalidInput() {
     if (this.state.differentPasswords === true) {
       return (
-        <ErrorText style={GlobalStyles.errorText}>Passwords do not match.</ErrorText>
+        <ErrorText>Passwords do not match.</ErrorText>
       );
     } else if (this.state.invalidEmailOrPassword === true) {
       return (
-        <ErrorText style={GlobalStyles.errorText}>
+        <ErrorText>
           Email must be valid and password must be greater than 5 characters.
         </ErrorText>
       );

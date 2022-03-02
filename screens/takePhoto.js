@@ -3,6 +3,12 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import GlobalStyles from "../styles/globalStyles";
+import {
+  TakePhotoContainer,
+  TakePhotoButtonContainer,
+  TakePhotoText,
+  TakePhotoButton,
+} from "../styles/styles";
 
 class TakePhotoScreen extends Component {
   constructor(props) {
@@ -67,24 +73,23 @@ class TakePhotoScreen extends Component {
   render() {
     if (this.state.hasPermission) {
       return (
-        <View style={GlobalStyles.takePhotoContainer}>
+        <TakePhotoContainer>
           <Camera
             style={GlobalStyles.camera}
             type={this.state.type}
             ref={(ref) => (this.camera = ref)}
           >
-            <View style={GlobalStyles.takePhotoButtonContainer}>
-              <TouchableOpacity
-                style={GlobalStyles.takePhotoButton}
+            <TakePhotoButtonContainer>
+              <TakePhotoButton
                 onPress={() => {
                   this.takePicture();
                 }}
               >
-                <Text style={GlobalStyles.takePhotoText}> Take Photo </Text>
-              </TouchableOpacity>
-            </View>
+                <TakePhotoText> Take Photo </TakePhotoText>
+              </TakePhotoButton>
+            </TakePhotoButtonContainer>
           </Camera>
-        </View>
+        </TakePhotoContainer>
       );
     } else {
       return <Text>No access to camera</Text>;
