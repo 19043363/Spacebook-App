@@ -69,6 +69,7 @@ export const LoadingView = styled.View `
 export const ProfileContainer = styled.View `
   alignItems: center;
   flexDirection: row;
+  flexWrap: wrap;
 `;
 
 export const ProfilePhoto = styled.Image `
@@ -101,34 +102,48 @@ export const TakePhotoText = styled.Text `
   color: white;
 `;
 
-export const DeletePostButton = styled.TouchableOpacity `
+export const IconButton = styled.TouchableOpacity `
   backgroundColor: transparent;
   padding: 5px;
 `;
 
-export const EditPostButton = styled.TouchableOpacity `
-  backgroundColor: transparent;
-  padding: 5px;
-`;
-
-export const LikePostButton = styled.TouchableOpacity `
-  backgroundColor: transparent;
-  padding: 5px;
-`;
-
-export const RemoveLikePostButton = styled.TouchableOpacity `
-  backgroundColor: transparent;
-  padding: 5px;
-`;
-
-export const PostButton = styled.TouchableOpacity `
+export const Button = styled.TouchableOpacity `
   backgroundColor: teal;
   borderRadius: 8px;
   padding: 5px;
 `;
 
+export const SearchButton = styled.TouchableOpacity `
+  backgroundColor: teal;
+  borderRadius: 8px;
+  padding: 5px;
+  flexDirection: flex-end;
+`;
+
+export const ButtonContainer = styled.View `
+  alignSelf: stretch;
+  padding: 5px;
+`;
 
 export const ButtonText = styled.Text `
+  alignSelf: center;
   fontSize: 16px;
   color: white;
+`;
+
+export const RowContainer = styled.View `
+  flexDirection: row;
+  justifyContent: space-between;
+  flexWrap: wrap;
+  alignItems: flex-start;
+`;
+
+export const PostInteractionButtonContainer = styled.View `
+  flexDirection: row;
+`;
+
+export const EndPageRowContainer = styled.View `
+  flexDirection: row;
+  justifyContent: center;
+  align-items: flex-end;
 `;

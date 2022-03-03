@@ -1,7 +1,17 @@
 import React, { Component } from "react";
-import { Button, ScrollView, View, Text } from "react-native";
+import { ScrollView, View, Text } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
+import {
+  Title,
+  Subtitle,
+  BodyText,
+  InputTextBox,
+  ErrorText,
+  LoadingView,
+  Button,
+  ButtonContainer,
+  ButtonText,
+} from "../styles/styles";
 
 class FriendRequestsScreen extends Component {
   constructor(props) {
@@ -25,7 +35,7 @@ class FriendRequestsScreen extends Component {
 
   getData = async () => {
     const value = await AsyncStorage.getItem("@session_token");
-    
+
     this.setState({
       isLoading: false,
     });
@@ -39,6 +49,8 @@ class FriendRequestsScreen extends Component {
   };
 
   render() {
+    const nav = this.props.navigation;
+
     if (this.state.isLoading) {
       return (
         <LoadingView>
@@ -48,10 +60,11 @@ class FriendRequestsScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <Button
-            title="Edit Profile"
-            onPress={() => this.props.navigation.navigate("Edit Profile")}
-          />
+          <ButtonContainer>
+            <Button onPress={() => nav.navigate("Edit Profile")}>
+              <ButtonText> Edit Profile </ButtonText>
+            </Button>
+          </ButtonContainer>
         </ScrollView>
       );
     }

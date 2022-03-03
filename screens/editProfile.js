@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { Button, ScrollView, View, Text, TextInput } from "react-native";
+import { ScrollView, View, Text, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
+import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView, Button, ButtonContainer, ButtonText } from "../styles/styles";
 
 class EditProfileScreen extends Component {
   constructor(props) {
@@ -220,8 +220,15 @@ class EditProfileScreen extends Component {
             }
             value={this.state.confirmPassword}
           />
+
           {this.checkInvalidInput()}
-          <Button title="Update" onPress={() => this.formValidation()} />
+
+          <ButtonContainer>
+            <Button onPress={() => this.formValidation()}>
+              <ButtonText> Update </ButtonText>
+            </Button>
+          </ButtonContainer>
+
         </ScrollView>
       );
     }

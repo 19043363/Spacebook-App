@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, View, ScrollView, FlatList } from "react-native";
+import { View, ScrollView, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {
@@ -13,12 +13,12 @@ import {
   LoadingView,
   ProfilePhoto,
   ProfileContainer,
-  PostInfoContainer,
-  PostButtonContainer,
-  LikePostButton,
-  RemoveLikePostButton,
-  PostButton,
+  IconButton,
+  Button,
   ButtonText,
+  ButtonContainer,
+  RowContainer,
+  PostInteractionButtonContainer,
 } from "../styles/styles";
 
 class FriendProfileScreen extends Component {
@@ -177,11 +177,11 @@ class FriendProfileScreen extends Component {
         if (response.status === 200) {
           this.getFriendPostData();
           return response.json();
+        } else if (response.status === 400) {
+          throw "You have already liked this post";
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
           throw "Unauthorized";
-        } else if (response.status === 403) {
-          throw "You have already liked this post";
         } else if (response.status === 404) {
           throw "Not found";
         } else if (response.status === 500) {
@@ -316,14 +316,11 @@ class FriendProfileScreen extends Component {
             </BodyText>
           </ProfileContainer>
 
-          <Button
-            title="Friends"
-            onPress={() =>
-              nav.navigate("Friends", {
-                user_id,
-              })
-            }
-          />
+          <ButtonContainer>
+            <Button onPress={() => nav.navigate("Friends", { user_id })}>
+              <ButtonText> Friends </ButtonText>
+            </Button>
+          </ButtonContainer>
 
           <InputPostTextBox
             placeholder="Post on your friend's wall!"
@@ -332,11 +329,11 @@ class FriendProfileScreen extends Component {
             value={this.state.text}
           />
 
-          <View style={{ alignSelf: "stretch", padding: 5 }}>
-            <PostButton onPress={() => this.addPost()}>
-              <ButtonText style={{ alignSelf: "center" }}>Post</ButtonText>
-            </PostButton>
-          </View>
+          <ButtonContainer>
+            <Button onPress={() => this.addPost()}>
+              <ButtonText> Post </ButtonText>
+            </Button>
+          </ButtonContainer>
 
           <FlatList
             data={this.state.postData}
@@ -344,15 +341,15 @@ class FriendProfileScreen extends Component {
               <View>
                 <PostTextBox>{item.text} </PostTextBox>
 
-                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                <RowContainer>
                   <BodyText>
                     {item.author.first_name} {item.author.last_name}
                     {"\n"}
                     {item.numLikes} Likes{" "}
                   </BodyText>
 
-                  <View style={{ flexDirection: "row"}}>
-                    <LikePostButton
+                  <PostInteractionButtonContainer>
+                    <IconButton
                       onPress={() => this.likeFriendPost(item.post_id)}
                     >
                       <View>
@@ -362,9 +359,9 @@ class FriendProfileScreen extends Component {
                           color={"firebrick"}
                         />
                       </View>
-                    </LikePostButton>
+                    </IconButton>
 
-                    <RemoveLikePostButton
+                    <IconButton
                       onPress={() =>
                         this.removeLikeFromFriendPost(item.post_id)
                       }
@@ -376,17 +373,20 @@ class FriendProfileScreen extends Component {
                           color={"black"}
                         />
                       </View>
-                    </RemoveLikePostButton>
-                  </View>
-                </View>
+                    </IconButton>
+                  </PostInteractionButtonContainer>
+                </RowContainer>
               </View>
             )}
             keyExtractor={(item, index) => item.post_id.toString()}
           />
-          <Button
-            title="Go back to Friends"
-            onPress={() => nav.navigate("Friends")}
-          />
+
+          <ButtonContainer>
+            <Button onPress={() => nav.navigate("Friends")}>
+              <ButtonText> Go back to Friends </ButtonText>
+            </Button>
+          </ButtonContainer>
+
         </ScrollView>
       );
     }

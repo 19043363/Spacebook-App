@@ -1,14 +1,21 @@
 import React, { Component } from "react";
-import {
-  Button,
-  ScrollView,
-  View,
-  Text,
-  TextInput,
-  FlatList,
-} from "react-native";
+import { ScrollView, View, Text, TextInput, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, InputPostTextBox, LoadingView } from "../styles/styles";
+import {
+  Title,
+  Subtitle,
+  BodyText,
+  InputTextBox,
+  ErrorText,
+  InputPostTextBox,
+  LoadingView,
+  Button,
+  ButtonContainer,
+  ButtonText,
+  RowContainer,
+  EndPageRowContainer,
+  SearchButton,
+} from "../styles/styles";
 
 class FindFriendsScreen extends Component {
   constructor(props) {
@@ -18,7 +25,7 @@ class FindFriendsScreen extends Component {
       isLoading: true,
       friendData: [],
       friendSearch: "",
-      pageLimit: 3,
+      pageLimit: 5,
       offset: 0,
       searchResultsLeft: 0,
     };
@@ -146,6 +153,8 @@ class FindFriendsScreen extends Component {
   };
 
   render() {
+    const nav = this.props.navigation;
+
     if (this.state.isLoading) {
       return (
         <LoadingView>
@@ -156,50 +165,59 @@ class FindFriendsScreen extends Component {
       return (
         <ScrollView>
           <Subtitle>Find Friends Placeholder</Subtitle>
+
           <InputTextBox
             placeholder="Search for Friends"
             onChangeText={(friendSearch) => this.setState({ friendSearch })}
             value={this.state.friendSearch}
           />
 
-          <Button
-            title="Search"
-            color="darkblue"
-            onPress={() => this.getFriendsSearch()}
-          />
+          <ButtonContainer>
+            <SearchButton onPress={() => this.getFriendsSearch()}>
+              <ButtonText> Search </ButtonText>
+            </SearchButton>
+          </ButtonContainer>
 
-          <Button
-            title="Friend Requests"
-            color="darkblue"
-            onPress={() => this.props.navigation.navigate("Friend Requests")}
-          />
+
+          <ButtonContainer>
+            <Button onPress={() => nav.navigate("Friend Requests")}>
+              <ButtonText> Friend Requests </ButtonText>
+            </Button>
+          </ButtonContainer>
 
           <FlatList
             data={this.state.friendData}
             renderItem={({ item }) => (
               <View>
-                <Button
-                  title={
-                    item.user_givenname + " " + item.user_familyname + " +"
-                  }
-                  onPress={() => this.postAddFriend(item.user_id)}
-                />
+                <ButtonContainer>
+                  <Button onPress={() => this.postAddFriend(item.user_id)}>
+                    <ButtonText>
+                      {" "}
+                      {item.user_givenname +
+                        " " +
+                        item.user_familyname +
+                        " +"}{" "}
+                    </ButtonText>
+                  </Button>
+                </ButtonContainer>
               </View>
             )}
             keyExtractor={(item, index) => item.user_id.toString()}
           />
 
-          <Button
-            title="Previous Page"
-            color="darkblue"
-            onPress={() => this.getPreviousSearchPage()}
-          />
+          <EndPageRowContainer>
+            <ButtonContainer>
+              <Button onPress={() => this.getPreviousSearchPage()}>
+                <ButtonText> Back </ButtonText>
+              </Button>
+            </ButtonContainer>
 
-          <Button
-            title="Next Page"
-            color="darkblue"
-            onPress={() => this.getNextSearchPage()}
-          />
+            <ButtonContainer>
+              <Button onPress={() => this.getNextSearchPage()}>
+                <ButtonText> Next </ButtonText>
+              </Button>
+            </ButtonContainer>
+          </EndPageRowContainer>
         </ScrollView>
       );
     }

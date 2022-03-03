@@ -1,17 +1,12 @@
 import React, { Component } from "react";
 import {
-  Button,
   View,
-  TouchableOpacity,
-  Text,
   FlatList,
   ScrollView,
-  StyleSheet,
 } from "react-native";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import GlobalStyles from "../styles/globalStyles";
 import {
   Container,
   BodyText,
@@ -20,11 +15,13 @@ import {
   ProfilePhoto,
   ProfileContainer,
   InputPostTextBox,
-  DeletePostButton,
-  EditPostButton,
-  PostButton,
+  IconButton,
+  Button,
   ButtonText,
   LikePostButton,
+  RowContainer,
+  PostInteractionButtonContainer,
+  ButtonContainer,
 } from "../styles/styles";
 
 class HomeScreen extends Component {
@@ -285,23 +282,33 @@ class HomeScreen extends Component {
             </BodyText>
           </ProfileContainer>
 
-          <Button title="Friends" onPress={() => nav.navigate("Friends")} />
+          <RowContainer>
+            
+            <ButtonContainer>
+              <Button onPress={() => nav.navigate("Take Photo")}>
+                <ButtonText> Take Photo </ButtonText>
+              </Button>
+            </ButtonContainer>
 
-          <Button
-            title="Take Photo"
-            onPress={() => this.props.navigation.navigate("Take Photo")}
-          />
+            <ButtonContainer>
+              <Button onPress={() => nav.navigate("Friends")}>
+                <ButtonText> Friends </ButtonText>
+              </Button>
+            </ButtonContainer>
 
-          <Button
-            title="Edit Profile"
-            onPress={() => this.props.navigation.navigate("Edit Profile")}
-          />
+            <ButtonContainer>
+              <Button onPress={() => nav.navigate("Edit Profile")}>
+                <ButtonText> Edit Profile </ButtonText>
+              </Button>
+            </ButtonContainer>
 
-          <Button
-            title="Logout"
-            color="darkblue"
-            onPress={() => this.props.navigation.navigate("Logout")}
-          />
+            <ButtonContainer>
+              <Button onPress={() => nav.navigate("Logout")}>
+                <ButtonText> Logout </ButtonText>
+              </Button>
+            </ButtonContainer>
+
+          </RowContainer>
 
           <InputPostTextBox
             placeholder="What's on your mind today?"
@@ -310,11 +317,11 @@ class HomeScreen extends Component {
             value={this.state.text}
           />
 
-          <View style={{ alignSelf: "stretch", padding: 5 }}>
-            <PostButton onPress={() => this.addPost()}>
-              <ButtonText style={{ alignSelf: "center" }}>Post</ButtonText>
-            </PostButton>
-          </View>
+          <ButtonContainer>
+            <Button onPress={() => this.addPost()}>
+              <ButtonText> Post </ButtonText>
+            </Button>
+          </ButtonContainer>
 
           <FlatList
             data={this.state.postData}
@@ -322,15 +329,15 @@ class HomeScreen extends Component {
               <View>
                 <PostTextBox>{item.text} </PostTextBox>
 
-                  <View style={{flexDirection: "row", justifyContent: "space-between"}}>
+                  <RowContainer>
                   <BodyText>
                     {item.author.first_name} {item.author.last_name}
                     {"\n"}
                     {item.numLikes} Likes{" "}
                   </BodyText>
 
-                    <View style={{flexDirection: "row",}}>
-                      <DeletePostButton
+                    <PostInteractionButtonContainer>
+                      <IconButton
                         onPress={() => this.removePost(item.post_id)}
                       >
                         <View>
@@ -340,9 +347,9 @@ class HomeScreen extends Component {
                             color={"black"}
                           />
                         </View>
-                      </DeletePostButton>
+                      </IconButton>
 
-                      <EditPostButton
+                      <IconButton
                         onPress={() =>
                           nav.navigate("Edit Post", { post_id: item.post_id })
                         }
@@ -354,9 +361,9 @@ class HomeScreen extends Component {
                             color={"black"}
                           />
                         </View>
-                      </EditPostButton>
-                    </View>
-                  </View>
+                      </IconButton>
+                    </PostInteractionButtonContainer>
+                  </RowContainer>
               </View>
             )}
             keyExtractor={(item, index) => item.post_id.toString()}
@@ -369,11 +376,3 @@ class HomeScreen extends Component {
 }
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  button: {
-    alignItems: "center",
-    backgroundColor: "#DDDDDD",
-    padding: 10,
-  },
-});
