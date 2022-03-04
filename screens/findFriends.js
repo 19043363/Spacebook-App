@@ -15,6 +15,7 @@ import {
   RowContainer,
   EndPageRowContainer,
   SearchButton,
+  Box,
 } from "../styles/styles";
 
 class FindFriendsScreen extends Component {
@@ -164,7 +165,7 @@ class FindFriendsScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <Subtitle>Find Friends Placeholder</Subtitle>
+          <Subtitle>Find Friends</Subtitle>
 
           <InputTextBox
             placeholder="Search for Friends"
@@ -178,7 +179,6 @@ class FindFriendsScreen extends Component {
             </SearchButton>
           </ButtonContainer>
 
-
           <ButtonContainer>
             <Button onPress={() => nav.navigate("Friend Requests")}>
               <ButtonText> Friend Requests </ButtonText>
@@ -188,19 +188,18 @@ class FindFriendsScreen extends Component {
           <FlatList
             data={this.state.friendData}
             renderItem={({ item }) => (
-              <View>
+              <Box>
                 <ButtonContainer>
-                  <Button onPress={() => this.postAddFriend(item.user_id)}>
-                    <ButtonText>
-                      {" "}
-                      {item.user_givenname +
-                        " " +
-                        item.user_familyname +
-                        " +"}{" "}
-                    </ButtonText>
-                  </Button>
+                  <RowContainer>
+                    <BodyText>
+                      {item.user_givenname + " " + item.user_familyname}
+                    </BodyText>
+                    <Button onPress={() => this.postAddFriend(item.user_id)}>
+                      <ButtonText>Add</ButtonText>
+                    </Button>
+                  </RowContainer>
                 </ButtonContainer>
-              </View>
+              </Box>
             )}
             keyExtractor={(item, index) => item.user_id.toString()}
           />

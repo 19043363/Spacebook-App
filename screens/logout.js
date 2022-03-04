@@ -1,7 +1,16 @@
 import React, { Component } from "react";
-import { Text, ScrollView, Button } from "react-native";
+import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText } from "../styles/styles";
+import {
+  Title,
+  Subtitle,
+  BodyText,
+  InputTextBox,
+  ErrorText,
+  Button,
+  ButtonContainer,
+  ButtonText,
+} from "../styles/styles";
 
 class LogoutScreen extends Component {
   constructor(props) {
@@ -58,20 +67,26 @@ class LogoutScreen extends Component {
   };
 
   render() {
+    const nav = this.props.navigation;
+
     return (
       <ScrollView>
         <Subtitle>
           If you leave me now, you'll take away the biggest part of me...
         </Subtitle>
-        <Subtitle>
-          ...Oooooohh, please don't go!
-        </Subtitle>
-        <Button title="I'm outta here" onPress={() => this.logout()} />
-        <Button
-          title="OK, take me home, country roads"
-          color="darkblue"
-          onPress={() => this.props.navigation.navigate("Home")}
-        />
+        <Subtitle>...Oooooohh, please don't go!</Subtitle>
+
+        <ButtonContainer>
+          <Button onPress={() => this.logout()}>
+            <ButtonText> Logout </ButtonText>
+          </Button>
+        </ButtonContainer>
+
+        <ButtonContainer>
+          <Button onPress={() => nav.navigate("Home")}>
+            <ButtonText> Return to Home </ButtonText>
+          </Button>
+        </ButtonContainer>
       </ScrollView>
     );
   }

@@ -34,6 +34,7 @@ class FriendProfileScreen extends Component {
       lastName: "",
       email: "",
       friendCount: 0,
+      loggedInUsersId: "",
     };
   }
 
@@ -53,7 +54,12 @@ class FriendProfileScreen extends Component {
 
   getFriendData = async () => {
     const token = await AsyncStorage.getItem("@session_token");
+    const id = await AsyncStorage.getItem("user_id");
     const { user_id } = this.props.route.params;
+
+    this.setState({
+      loggedInUsersId: id,
+    })
 
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id, {
       method: "get",
@@ -113,7 +119,7 @@ class FriendProfileScreen extends Component {
         });
       })
       .catch((error) => {
-        console.log("error", error);
+        console.log(error);
       });
   };
 
@@ -245,7 +251,7 @@ class FriendProfileScreen extends Component {
       });
   };
 
-  postAddPost = async () => {
+  addPost = async () => {
     const token = await AsyncStorage.getItem("@session_token");
     const { user_id } = this.props.route.params;
 
@@ -282,8 +288,51 @@ class FriendProfileScreen extends Component {
       });
   };
 
+
+
+  removePost = async (post_id) => {
+    const token = await AsyncStorage.getItem("@session_token");
+
+    return fetch(
+      "http://localhost:3333/api/1.0.0/user/" + this.state.userId + "/post/" + post_id,
+      {
+        method: "delete",
+        headers: {
+          "X-Authorization": token,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+      .then((response) => {
+        if (response.status === 200) {
+          this.getFriendPostData();
+          return response.json();
+        } else if (response.status === 401) {
+          this.props.navigation.navigate("Login");
+          throw "Unauthorized";
+        } else if (response.status === 403) {
+          throw "You can only delete your own posts";
+        } else if (response.status === 404) {
+          throw "Not found";
+        } else if (response.status === 500) {
+          throw "Server error";
+        } else {
+          throw "Something went wrong";
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
   checkLoggedIn = async () => {
     const value = await AsyncStorage.getItem("@session_token");
+    const id = await AsyncStorage.getItem("user_id");
+
+    this.setState({
+      loggedInUsersId: id,
+    });
+
     if (value == null) {
       this.props.navigation.navigate("Login");
     }
@@ -343,38 +392,67 @@ class FriendProfileScreen extends Component {
 
                 <RowContainer>
                   <BodyText>
-                    {item.author.first_name} {item.author.last_name}
+                    {item.author.first_name} {item.author.last_name}{" "}
                     {"\n"}
                     {item.numLikes} Likes{" "}
                   </BodyText>
 
-                  <PostInteractionButtonContainer>
-                    <IconButton
-                      onPress={() => this.likeFriendPost(item.post_id)}
-                    >
+                  {item.author.user_id == this.state.loggedInUsersId ? (
+                    <PostInteractionButtonContainer>
+                    <IconButton onPress={() => this.removePost(item.post_id)}>
                       <View>
                         <Ionicons
-                          name={"heart"}
+                          name={"trash-bin"}
                           size={buttonSize}
-                          color={"firebrick"}
+                          color={"black"}
                         />
                       </View>
                     </IconButton>
 
                     <IconButton
                       onPress={() =>
-                        this.removeLikeFromFriendPost(item.post_id)
+                        nav.navigate("Edit Post", { post_id: item.post_id,
+                        user_id: this.state.userId })
                       }
                     >
                       <View>
                         <Ionicons
-                          name={"heart-dislike"}
+                          name={"create-outline"}
                           size={buttonSize}
                           color={"black"}
                         />
                       </View>
                     </IconButton>
                   </PostInteractionButtonContainer>
+                  ) : (
+                    <PostInteractionButtonContainer>
+                      <IconButton
+                        onPress={() => this.likeFriendPost(item.post_id)}
+                      >
+                        <View>
+                          <Ionicons
+                            name={"heart"}
+                            size={buttonSize}
+                            color={"firebrick"}
+                          />
+                        </View>
+                      </IconButton>
+
+                      <IconButton
+                        onPress={() =>
+                          this.removeLikeFromFriendPost(item.post_id)
+                        }
+                      >
+                        <View>
+                          <Ionicons
+                            name={"heart-dislike"}
+                            size={buttonSize}
+                            color={"black"}
+                          />
+                        </View>
+                      </IconButton>
+                    </PostInteractionButtonContainer>
+                  )}
                 </RowContainer>
               </View>
             )}
@@ -386,7 +464,6 @@ class FriendProfileScreen extends Component {
               <ButtonText> Go back to Friends </ButtonText>
             </Button>
           </ButtonContainer>
-
         </ScrollView>
       );
     }

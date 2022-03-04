@@ -1,6 +1,16 @@
 import React, { Component } from "react";
-import { Button, ScrollView, TextInput, Text } from "react-native";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
+import { ScrollView } from "react-native";
+import {
+  Title,
+  Subtitle,
+  BodyText,
+  InputTextBox,
+  ErrorText,
+  LoadingView,
+  Button,
+  ButtonContainer,
+  ButtonText,
+} from "../styles/styles";
 
 class SignupScreen extends Component {
   constructor(props) {
@@ -76,6 +86,7 @@ class SignupScreen extends Component {
   }
 
   render() {
+    const nav = this.props.navigation;
     return (
       <ScrollView>
         <Title>Sign up</Title>
@@ -114,15 +125,17 @@ class SignupScreen extends Component {
           secureTextEntry
         />
         {this.checkInvalidInput()}
-        <Button
-          title="Create an account"
-          onPress={() => this.formValidation()}
-        />
-        <Button
-          onPress={() => this.props.navigation.navigate("Login")}
-          color="darkblue"
-          title="Return to Login Page"
-        />
+        <ButtonContainer>
+          <Button onPress={() => this.formValidation()}>
+            <ButtonText> Create an account </ButtonText>
+          </Button>
+        </ButtonContainer>
+
+        <ButtonContainer>
+          <Button onPress={() => nav.navigate("Login")}>
+            <ButtonText> Return to Login Page </ButtonText>
+          </Button>
+        </ButtonContainer>
       </ScrollView>
     );
   }

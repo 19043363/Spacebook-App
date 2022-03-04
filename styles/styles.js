@@ -1,5 +1,8 @@
 import styled from "styled-components/native";
 
+export const ScrollView = styled.ScrollView `
+`;
+
 export const Container = styled.View `
   margin: 10px;
 `;
@@ -117,7 +120,18 @@ export const SearchButton = styled.TouchableOpacity `
   backgroundColor: teal;
   borderRadius: 8px;
   padding: 5px;
-  flexDirection: flex-end;
+`;
+
+export const AcceptButton = styled.TouchableOpacity `
+  backgroundColor: seagreen;
+  borderRadius: 8px;
+  padding: 5px;
+`;
+
+export const RejectButton = styled.TouchableOpacity `
+  backgroundColor: firebrick;
+  borderRadius: 8px;
+  padding: 5px;
 `;
 
 export const ButtonContainer = styled.View `
@@ -147,3 +161,11 @@ export const EndPageRowContainer = styled.View `
   justifyContent: center;
   align-items: flex-end;
 `;
+
+export const Box = styled.View `
+  borderWidth: 1px;
+  padding: 5px;
+  margin: 5px;
+  borderRadius: 5px;
+`;
+

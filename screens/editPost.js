@@ -1,7 +1,18 @@
 import React, { Component } from "react";
-import { Button, ScrollView, View, Text, TextInput } from "react-native";
+import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, InputPostTextBox, LoadingView } from "../styles/styles";
+import {
+  Title,
+  Subtitle,
+  BodyText,
+  InputTextBox,
+  ErrorText,
+  InputPostTextBox,
+  LoadingView,
+  Button,
+  ButtonContainer,
+  ButtonText,
+} from "../styles/styles";
 
 class EditProfileScreen extends Component {
   constructor(props) {
@@ -16,11 +27,11 @@ class EditProfileScreen extends Component {
   }
 
   componentDidMount() {
-    const { post_id } = this.props.route.params;
+    const { post_id, user_id } = this.props.route.params;
 
     this.unsubscribe = this.props.navigation.addListener("focus", () => {
       this.checkLoggedIn();
-      this.getPostData(post_id);
+      this.getPostData(post_id, user_id);
     });
   }
 
@@ -28,12 +39,11 @@ class EditProfileScreen extends Component {
     this.unsubscribe();
   }
 
-  getPostData = async (post_id) => {
+  getPostData = async (post_id, user_id) => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
 
     return fetch(
-      "http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id,
+      "http://localhost:3333/api/1.0.0/user/" + user_id + "/post/" + post_id,
       {
         method: "get",
         headers: {
@@ -70,9 +80,9 @@ class EditProfileScreen extends Component {
       });
   };
 
-  updatePost = async (post_id) => {
+  updatePost = async (post_id, user_id) => {
     const token = await AsyncStorage.getItem("@session_token");
-    const id = await AsyncStorage.getItem("user_id");
+    const nav = this.props.navigation;
 
     let to_send = {};
 
@@ -81,7 +91,7 @@ class EditProfileScreen extends Component {
     }
 
     return fetch(
-      "http://localhost:3333/api/1.0.0/user/" + id + "/post/" + post_id,
+      "http://localhost:3333/api/1.0.0/user/" + user_id + "/post/" + post_id,
       {
         method: "PATCH",
         headers: {
@@ -93,12 +103,12 @@ class EditProfileScreen extends Component {
     )
       .then((response) => {
         if (response.status === 200) {
-          console.log("Item updated");
+          nav.navigate("Home");
           return response.json();
         } else if (response.status === 400) {
           throw "Bad request";
         } else if (response.status === 401) {
-          this.props.navigation.navigate("Login");
+          nav.navigate("Login");
           throw "Unauthorized";
         } else if (response.status === 403) {
           throw "You can only update your own posts";
@@ -107,7 +117,6 @@ class EditProfileScreen extends Component {
         } else {
           throw "Something went wrong";
         }
-        
       })
       .catch((error) => {
         console.log(error);
@@ -122,7 +131,8 @@ class EditProfileScreen extends Component {
   };
 
   render() {
-    const { post_id } = this.props.route.params;
+    const nav = this.props.navigation;
+    const { post_id, user_id } = this.props.route.params;
 
     if (this.state.isLoading) {
       return (
@@ -141,12 +151,17 @@ class EditProfileScreen extends Component {
             value={this.state.text}
           />
 
-          <Button title="Update" onPress={() => this.updatePost(post_id)} />
+          <ButtonContainer>
+            <Button onPress={() => this.updatePost(post_id, user_id)}>
+              <ButtonText> Update </ButtonText>
+            </Button>
+          </ButtonContainer>
 
-          <Button
-            title="Return to Home"
-            onPress={() => this.props.navigation.navigate("Home")}
-          />
+          <ButtonContainer>
+            <Button onPress={() => nav.navigate("Home")}>
+              <ButtonText> Return to Home </ButtonText>
+            </Button>
+          </ButtonContainer>
         </ScrollView>
       );
     }

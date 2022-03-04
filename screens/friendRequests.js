@@ -1,7 +1,19 @@
 import React, { Component } from "react";
-import { Button, ScrollView, View, Text, FlatList } from "react-native";
+import { ScrollView, View, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView } from "../styles/styles";
+import {
+  Title,
+  Subtitle,
+  BodyText,
+  InputTextBox,
+  ErrorText,
+  LoadingView,
+  AcceptButton,
+  RejectButton,
+  ButtonContainer,
+  ButtonText,
+  Box,
+} from "../styles/styles";
 
 class FriendRequestsScreen extends Component {
   constructor(props) {
@@ -140,19 +152,26 @@ class FriendRequestsScreen extends Component {
           <FlatList
             data={this.state.friendRequestData}
             renderItem={({ item }) => (
-              <View>
-                <Button title={item.first_name + " " + item.last_name} />
-                <Button
-                  title={"Accept"}
-                  color="seagreen"
-                  onPress={() => this.acceptFriendRequest(item.user_id)}
-                />
-                <Button
-                  title={"Reject"}
-                  color="firebrick"
-                  onPress={() => this.rejectFriendRequest(item.user_id)}
-                />
-              </View>
+              <Box>
+                <BodyText>{item.first_name + " " + item.last_name}</BodyText>
+
+                <ButtonContainer>
+                  <AcceptButton
+                    onPress={() => this.acceptFriendRequest(item.user_id)}
+                  >
+                    <ButtonText> Accept </ButtonText>
+                  </AcceptButton>
+                </ButtonContainer>
+
+                <ButtonContainer>
+                  <RejectButton
+                    onPress={() => this.rejectFriendRequest(item.user_id)}
+                  >
+                    <ButtonText> Reject </ButtonText>
+                  </RejectButton>
+                </ButtonContainer>
+                
+                </Box>
             )}
             keyExtractor={(item, index) => item.user_id.toString()}
           />

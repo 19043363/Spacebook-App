@@ -1,8 +1,15 @@
 import React, { Component } from "react";
-import { Button } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Title, BodyText, InputTextBox, ErrorText } from "../styles/styles";
+import {
+  Title,
+  BodyText,
+  InputTextBox,
+  ErrorText,
+  Button,
+  ButtonContainer,
+  ButtonText,
+} from "../styles/styles";
 
 class LoginScreen extends Component {
   constructor(props) {
@@ -31,8 +38,8 @@ class LoginScreen extends Component {
           return response.json();
         } else if (response.status === 400) {
           this.setState({
-            checkInvalidInput: true
-          })
+            checkInvalidInput: true,
+          });
           throw "Invalid email/password supplied";
         } else if (response.status === 500) {
           throw "Server error";
@@ -50,14 +57,16 @@ class LoginScreen extends Component {
       });
   };
 
-  checkInvalidInput(){
-    if (this.state.checkInvalidInput === true){
-      return <ErrorText>Invalid email/password supplied </ErrorText>
+  checkInvalidInput() {
+    if (this.state.checkInvalidInput === true) {
+      return <ErrorText>Invalid email/password supplied </ErrorText>;
     }
     return null;
   }
 
   render() {
+    const nav = this.props.navigation;
+
     return (
       <ScrollView>
         <Title>Login</Title>
@@ -79,13 +88,17 @@ class LoginScreen extends Component {
 
         {this.checkInvalidInput()}
 
-        <Button title="Login" onPress={() => this.login()} />
+        <ButtonContainer>
+          <Button onPress={() => this.login()}>
+            <ButtonText> Login </ButtonText>
+          </Button>
+        </ButtonContainer>
 
-        <Button
-          title="Don't have an account?"
-          color="darkblue"
-          onPress={() => this.props.navigation.navigate("Signup")}
-        />
+        <ButtonContainer>
+          <Button onPress={() => nav.navigate("Signup")}>
+            <ButtonText> Don't have an account? </ButtonText>
+          </Button>
+        </ButtonContainer>
       </ScrollView>
     );
   }
