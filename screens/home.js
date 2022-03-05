@@ -4,19 +4,19 @@ import { View, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {
-  Container,
   BodyText,
-  PostTextBox,
-  LoadingView,
-  ProfilePhoto,
-  ProfileContainer,
-  InputPostTextBox,
-  IconButton,
   Button,
-  ButtonText,
-  RowContainer,
-  PostInteractionButtonContainer,
   ButtonContainer,
+  ButtonText,
+  Container,
+  IconButton,
+  InputPostTextBox,
+  LoadingView,
+  PostInteractionButtonContainer,
+  PostTextBox,
+  ProfileContainer,
+  ProfilePhoto,
+  RowContainer,
   ScrollView,
 } from "../styles/styles";
 

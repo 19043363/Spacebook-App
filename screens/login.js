@@ -2,13 +2,14 @@ import React, { Component } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  Title,
   BodyText,
-  InputTextBox,
-  ErrorText,
   Button,
   ButtonContainer,
   ButtonText,
+  Container,
+  ErrorText,
+  InputTextBox,
+  Title,
 } from "../styles/styles";
 
 class LoginScreen extends Component {
@@ -69,36 +70,38 @@ class LoginScreen extends Component {
 
     return (
       <ScrollView>
-        <Title>Login</Title>
+        <Container>
+          <Title>Login</Title>
 
-        <BodyText>Email</BodyText>
-        <InputTextBox
-          placeholder="Enter your email..."
-          onChangeText={(email) => this.setState({ email })}
-          value={this.state.email}
-        />
+          <BodyText>Email</BodyText>
+          <InputTextBox
+            placeholder="Enter your email..."
+            onChangeText={(email) => this.setState({ email })}
+            value={this.state.email}
+          />
 
-        <BodyText>Password</BodyText>
-        <InputTextBox
-          placeholder="Enter your password..."
-          onChangeText={(password) => this.setState({ password })}
-          value={this.state.password}
-          secureTextEntry
-        />
+          <BodyText>Password</BodyText>
+          <InputTextBox
+            placeholder="Enter your password..."
+            onChangeText={(password) => this.setState({ password })}
+            value={this.state.password}
+            secureTextEntry
+          />
 
-        {this.checkInvalidInput()}
+          {this.checkInvalidInput()}
 
-        <ButtonContainer>
-          <Button onPress={() => this.login()}>
-            <ButtonText> Login </ButtonText>
-          </Button>
-        </ButtonContainer>
+          <ButtonContainer>
+            <Button onPress={() => this.login()}>
+              <ButtonText> Login </ButtonText>
+            </Button>
+          </ButtonContainer>
 
-        <ButtonContainer>
-          <Button onPress={() => nav.navigate("Signup")}>
-            <ButtonText> Don't have an account? </ButtonText>
-          </Button>
-        </ButtonContainer>
+          <ButtonContainer>
+            <Button onPress={() => nav.navigate("Signup")}>
+              <ButtonText> Don't have an account? </ButtonText>
+            </Button>
+          </ButtonContainer>
+        </Container>
       </ScrollView>
     );
   }

@@ -2,16 +2,14 @@ import React, { Component } from "react";
 import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  Title,
-  Subtitle,
   BodyText,
-  InputTextBox,
-  ErrorText,
-  InputPostTextBox,
-  LoadingView,
   Button,
   ButtonContainer,
   ButtonText,
+  Container,
+  InputPostTextBox,
+  LoadingView,
+  Subtitle,
 } from "../styles/styles";
 
 class EditProfileScreen extends Component {
@@ -82,6 +80,7 @@ class EditProfileScreen extends Component {
 
   updatePost = async (post_id, user_id) => {
     const token = await AsyncStorage.getItem("@session_token");
+    const id = await AsyncStorage.getItem("user_id");
     const nav = this.props.navigation;
 
     let to_send = {};
@@ -103,7 +102,13 @@ class EditProfileScreen extends Component {
     )
       .then((response) => {
         if (response.status === 200) {
-          nav.navigate("Home");
+          if (user_id == id) {
+            nav.navigate("Home");
+          } else {
+            nav.navigate("Friend Profile", {
+              user_id: user_id,
+            });
+          }
           return response.json();
         } else if (response.status === 400) {
           throw "Bad request";
@@ -143,25 +148,27 @@ class EditProfileScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <Subtitle>Edit Post</Subtitle>
-          <InputPostTextBox
-            placeholder={"Edit your Post"}
-            multiline={true}
-            onChangeText={(text) => this.setState({ text })}
-            value={this.state.text}
-          />
+          <Container>
+            <Subtitle>Edit Post</Subtitle>
+            <InputPostTextBox
+              placeholder={"Edit your Post"}
+              multiline={true}
+              onChangeText={(text) => this.setState({ text })}
+              value={this.state.text}
+            />
 
-          <ButtonContainer>
-            <Button onPress={() => this.updatePost(post_id, user_id)}>
-              <ButtonText> Update </ButtonText>
-            </Button>
-          </ButtonContainer>
+            <ButtonContainer>
+              <Button onPress={() => this.updatePost(post_id, user_id)}>
+                <ButtonText> Update </ButtonText>
+              </Button>
+            </ButtonContainer>
 
-          <ButtonContainer>
-            <Button onPress={() => nav.navigate("Home")}>
-              <ButtonText> Return to Home </ButtonText>
-            </Button>
-          </ButtonContainer>
+            <ButtonContainer>
+              <Button onPress={() => nav.navigate("Home")}>
+                <ButtonText> Return to Home </ButtonText>
+              </Button>
+            </ButtonContainer>
+          </Container>
         </ScrollView>
       );
     }

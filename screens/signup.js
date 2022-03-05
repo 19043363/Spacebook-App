@@ -1,15 +1,15 @@
 import React, { Component } from "react";
 import { ScrollView } from "react-native";
 import {
-  Title,
-  Subtitle,
   BodyText,
-  InputTextBox,
-  ErrorText,
-  LoadingView,
   Button,
   ButtonContainer,
   ButtonText,
+  Container,
+  ErrorText,
+  InputTextBox,
+  Subtitle,
+  Title,
 } from "../styles/styles";
 
 class SignupScreen extends Component {
@@ -89,53 +89,57 @@ class SignupScreen extends Component {
     const nav = this.props.navigation;
     return (
       <ScrollView>
-        <Title>Sign up</Title>
-        <Subtitle>Welcome to Spacebook!</Subtitle>
+        <Container>
+          <Title>Sign up</Title>
+          <Subtitle>Welcome to Spacebook!</Subtitle>
 
-        <BodyText>First Name</BodyText>
-        <InputTextBox
-          placeholder="Enter your first name..."
-          onChangeText={(first_name) => this.setState({ first_name })}
-          value={this.state.first_name}
-        />
-        <BodyText>Last Name</BodyText>
-        <InputTextBox
-          placeholder="Enter your last name..."
-          onChangeText={(last_name) => this.setState({ last_name })}
-          value={this.state.last_name}
-        />
-        <BodyText>Email</BodyText>
-        <InputTextBox
-          placeholder="Enter your email..."
-          onChangeText={(email) => this.setState({ email })}
-          value={this.state.email}
-        />
-        <BodyText>Password</BodyText>
-        <InputTextBox
-          placeholder="Enter your password..."
-          onChangeText={(password) => this.setState({ password })}
-          value={this.state.password}
-          secureTextEntry
-        />
-        <BodyText>Confirm Password</BodyText>
-        <InputTextBox
-          placeholder="Confirm password..."
-          onChangeText={(confirmPassword) => this.setState({ confirmPassword })}
-          value={this.state.confirmPassword}
-          secureTextEntry
-        />
-        {this.checkInvalidInput()}
-        <ButtonContainer>
-          <Button onPress={() => this.formValidation()}>
-            <ButtonText> Create an account </ButtonText>
-          </Button>
-        </ButtonContainer>
+          <BodyText>First Name</BodyText>
+          <InputTextBox
+            placeholder="Enter your first name..."
+            onChangeText={(first_name) => this.setState({ first_name })}
+            value={this.state.first_name}
+          />
+          <BodyText>Last Name</BodyText>
+          <InputTextBox
+            placeholder="Enter your last name..."
+            onChangeText={(last_name) => this.setState({ last_name })}
+            value={this.state.last_name}
+          />
+          <BodyText>Email</BodyText>
+          <InputTextBox
+            placeholder="Enter your email..."
+            onChangeText={(email) => this.setState({ email })}
+            value={this.state.email}
+          />
+          <BodyText>Password</BodyText>
+          <InputTextBox
+            placeholder="Enter your password..."
+            onChangeText={(password) => this.setState({ password })}
+            value={this.state.password}
+            secureTextEntry
+          />
+          <BodyText>Confirm Password</BodyText>
+          <InputTextBox
+            placeholder="Confirm password..."
+            onChangeText={(confirmPassword) =>
+              this.setState({ confirmPassword })
+            }
+            value={this.state.confirmPassword}
+            secureTextEntry
+          />
+          {this.checkInvalidInput()}
+          <ButtonContainer>
+            <Button onPress={() => this.formValidation()}>
+              <ButtonText> Create an account </ButtonText>
+            </Button>
+          </ButtonContainer>
 
-        <ButtonContainer>
-          <Button onPress={() => nav.navigate("Login")}>
-            <ButtonText> Return to Login Page </ButtonText>
-          </Button>
-        </ButtonContainer>
+          <ButtonContainer>
+            <Button onPress={() => nav.navigate("Login")}>
+              <ButtonText> Return to Login Page </ButtonText>
+            </Button>
+          </ButtonContainer>
+        </Container>
       </ScrollView>
     );
   }

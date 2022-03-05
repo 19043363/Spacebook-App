@@ -1,21 +1,19 @@
 import React, { Component } from "react";
-import { ScrollView, View, Text, TextInput, FlatList } from "react-native";
+import { ScrollView, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  Title,
-  Subtitle,
   BodyText,
-  InputTextBox,
-  ErrorText,
-  InputPostTextBox,
-  LoadingView,
+  Box,
   Button,
   ButtonContainer,
   ButtonText,
-  RowContainer,
+  Container,
   EndPageRowContainer,
+  InputTextBox,
+  LoadingView,
+  RowContainer,
   SearchButton,
-  Box,
+  Subtitle,
 } from "../styles/styles";
 
 class FindFriendsScreen extends Component {
@@ -165,58 +163,60 @@ class FindFriendsScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <Subtitle>Find Friends</Subtitle>
+          <Container>
+            <Subtitle>Find Friends</Subtitle>
 
-          <InputTextBox
-            placeholder="Search for Friends"
-            onChangeText={(friendSearch) => this.setState({ friendSearch })}
-            value={this.state.friendSearch}
-          />
+            <InputTextBox
+              placeholder="Search for Friends"
+              onChangeText={(friendSearch) => this.setState({ friendSearch })}
+              value={this.state.friendSearch}
+            />
 
-          <ButtonContainer>
-            <SearchButton onPress={() => this.getFriendsSearch()}>
-              <ButtonText> Search </ButtonText>
-            </SearchButton>
-          </ButtonContainer>
-
-          <ButtonContainer>
-            <Button onPress={() => nav.navigate("Friend Requests")}>
-              <ButtonText> Friend Requests </ButtonText>
-            </Button>
-          </ButtonContainer>
-
-          <FlatList
-            data={this.state.friendData}
-            renderItem={({ item }) => (
-              <Box>
-                <ButtonContainer>
-                  <RowContainer>
-                    <BodyText>
-                      {item.user_givenname + " " + item.user_familyname}
-                    </BodyText>
-                    <Button onPress={() => this.postAddFriend(item.user_id)}>
-                      <ButtonText>Add</ButtonText>
-                    </Button>
-                  </RowContainer>
-                </ButtonContainer>
-              </Box>
-            )}
-            keyExtractor={(item, index) => item.user_id.toString()}
-          />
-
-          <EndPageRowContainer>
             <ButtonContainer>
-              <Button onPress={() => this.getPreviousSearchPage()}>
-                <ButtonText> Back </ButtonText>
-              </Button>
+              <SearchButton onPress={() => this.getFriendsSearch()}>
+                <ButtonText> Search </ButtonText>
+              </SearchButton>
             </ButtonContainer>
 
             <ButtonContainer>
-              <Button onPress={() => this.getNextSearchPage()}>
-                <ButtonText> Next </ButtonText>
+              <Button onPress={() => nav.navigate("Friend Requests")}>
+                <ButtonText> Friend Requests </ButtonText>
               </Button>
             </ButtonContainer>
-          </EndPageRowContainer>
+
+            <FlatList
+              data={this.state.friendData}
+              renderItem={({ item }) => (
+                <Box>
+                  <ButtonContainer>
+                    <RowContainer>
+                      <BodyText>
+                        {item.user_givenname + " " + item.user_familyname}
+                      </BodyText>
+                      <Button onPress={() => this.postAddFriend(item.user_id)}>
+                        <ButtonText>Add</ButtonText>
+                      </Button>
+                    </RowContainer>
+                  </ButtonContainer>
+                </Box>
+              )}
+              keyExtractor={(item, index) => item.user_id.toString()}
+            />
+
+            <EndPageRowContainer>
+              <ButtonContainer>
+                <Button onPress={() => this.getPreviousSearchPage()}>
+                  <ButtonText> Back </ButtonText>
+                </Button>
+              </ButtonContainer>
+
+              <ButtonContainer>
+                <Button onPress={() => this.getNextSearchPage()}>
+                  <ButtonText> Next </ButtonText>
+                </Button>
+              </ButtonContainer>
+            </EndPageRowContainer>
+          </Container>
         </ScrollView>
       );
     }

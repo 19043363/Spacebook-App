@@ -2,15 +2,14 @@ import React, { Component } from "react";
 import { ScrollView, View, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  Title,
-  Subtitle,
   BodyText,
-  InputTextBox,
-  ErrorText,
-  LoadingView,
   Button,
   ButtonContainer,
   ButtonText,
+  Container,
+  InputTextBox,
+  LoadingView,
+  Subtitle,
 } from "../styles/styles";
 
 class FriendsScreen extends Component {
@@ -149,42 +148,44 @@ class FriendsScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <Subtitle>Friends</Subtitle>
+          <Container>
+            <Subtitle>Friends</Subtitle>
 
-          <InputTextBox
-            placeholder="Search for Friends"
-            onChangeText={(friendSearch) => this.setState({ friendSearch })}
-            value={this.state.friendSearch}
-          />
+            <InputTextBox
+              placeholder="Search for Friends"
+              onChangeText={(friendSearch) => this.setState({ friendSearch })}
+              value={this.state.friendSearch}
+            />
 
-          <ButtonContainer>
-            <Button onPress={() => this.getFriendsSearch()}>
-              <ButtonText> Search </ButtonText>
-            </Button>
-          </ButtonContainer>
+            <ButtonContainer>
+              <Button onPress={() => this.getFriendsSearch()}>
+                <ButtonText> Search </ButtonText>
+              </Button>
+            </ButtonContainer>
 
-          <FlatList
-            data={this.state.friendData}
-            renderItem={({ item }) => (
-              <View>
-                <ButtonContainer>
-                  <Button
-                    onPress={() =>
-                      nav.navigate("Friend Profile", {
-                        user_id: item.user_id,
-                      })
-                    }
-                  >
-                    <ButtonText>
-                      {" "}
-                      {item.user_givenname + " " + item.user_familyname}{" "}
-                    </ButtonText>
-                  </Button>
-                </ButtonContainer>
-              </View>
-            )}
-            keyExtractor={(item, index) => item.user_id.toString()}
-          />
+            <FlatList
+              data={this.state.friendData}
+              renderItem={({ item }) => (
+                <View>
+                  <ButtonContainer>
+                    <Button
+                      onPress={() =>
+                        nav.navigate("Friend Profile", {
+                          user_id: item.user_id,
+                        })
+                      }
+                    >
+                      <ButtonText>
+                        {" "}
+                        {item.user_givenname + " " + item.user_familyname}{" "}
+                      </ButtonText>
+                    </Button>
+                  </ButtonContainer>
+                </View>
+              )}
+              keyExtractor={(item, index) => item.user_id.toString()}
+            />
+          </Container>
         </ScrollView>
       );
     }

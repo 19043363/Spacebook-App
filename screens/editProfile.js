@@ -1,7 +1,17 @@
 import React, { Component } from "react";
-import { ScrollView, View, Text, TextInput } from "react-native";
+import { ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Title, Subtitle, BodyText, InputTextBox, ErrorText, LoadingView, Button, ButtonContainer, ButtonText } from "../styles/styles";
+import {
+  BodyText,
+  Button,
+  ButtonContainer,
+  ButtonText,
+  Container,
+  ErrorText,
+  InputTextBox,
+  LoadingView,
+  Subtitle,
+} from "../styles/styles";
 
 class EditProfileScreen extends Component {
   constructor(props) {
@@ -114,8 +124,8 @@ class EditProfileScreen extends Component {
           this.props.navigation.navigate("Home");
         } else if (response.status === 400) {
           this.setState({
-            invalidEmailOrPassword: true
-          })
+            invalidEmailOrPassword: true,
+          });
           throw "Bad request";
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
@@ -150,9 +160,7 @@ class EditProfileScreen extends Component {
 
   checkInvalidInput() {
     if (this.state.differentPasswords === true) {
-      return (
-        <ErrorText>Passwords do not match.</ErrorText>
-      );
+      return <ErrorText>Passwords do not match.</ErrorText>;
     } else if (this.state.invalidEmailOrPassword === true) {
       return (
         <ErrorText>
@@ -180,55 +188,56 @@ class EditProfileScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <Subtitle>Edit Profile</Subtitle>
+          <Container>
+            <Subtitle>Edit Profile</Subtitle>
 
-          <BodyText>First Name</BodyText>
-          <InputTextBox
-            placeholder={this.state.origFirstName}
-            onChangeText={(firstName) => this.setState({ firstName })}
-            value={this.state.firstName}
-          />
+            <BodyText>First Name</BodyText>
+            <InputTextBox
+              placeholder={this.state.origFirstName}
+              onChangeText={(firstName) => this.setState({ firstName })}
+              value={this.state.firstName}
+            />
 
-          <BodyText>Last Name</BodyText>
-          <InputTextBox
-            placeholder={this.state.origLastName}
-            onChangeText={(lastName) => this.setState({ lastName })}
-            value={this.state.lastName}
-          />
+            <BodyText>Last Name</BodyText>
+            <InputTextBox
+              placeholder={this.state.origLastName}
+              onChangeText={(lastName) => this.setState({ lastName })}
+              value={this.state.lastName}
+            />
 
-          <BodyText>Email</BodyText>
-          <InputTextBox
-            placeholder={this.state.origEmail}
-            onChangeText={(email) => this.setState({ email })}
-            value={this.state.email}
-          />
+            <BodyText>Email</BodyText>
+            <InputTextBox
+              placeholder={this.state.origEmail}
+              onChangeText={(email) => this.setState({ email })}
+              value={this.state.email}
+            />
 
-          <BodyText>Password</BodyText>
-          <InputTextBox
-            placeholder={"New Password"}
-            secureTextEntry
-            onChangeText={(password) => this.setState({ password })}
-            value={this.state.password}
-          />
+            <BodyText>Password</BodyText>
+            <InputTextBox
+              placeholder={"New Password"}
+              secureTextEntry
+              onChangeText={(password) => this.setState({ password })}
+              value={this.state.password}
+            />
 
-          <BodyText>Confirm Password</BodyText>
-          <InputTextBox
-            placeholder={"Confirm Password"}
-            secureTextEntry
-            onChangeText={(confirmPassword) =>
-              this.setState({ confirmPassword })
-            }
-            value={this.state.confirmPassword}
-          />
+            <BodyText>Confirm Password</BodyText>
+            <InputTextBox
+              placeholder={"Confirm Password"}
+              secureTextEntry
+              onChangeText={(confirmPassword) =>
+                this.setState({ confirmPassword })
+              }
+              value={this.state.confirmPassword}
+            />
 
-          {this.checkInvalidInput()}
+            {this.checkInvalidInput()}
 
-          <ButtonContainer>
-            <Button onPress={() => this.formValidation()}>
-              <ButtonText> Update </ButtonText>
-            </Button>
-          </ButtonContainer>
-
+            <ButtonContainer>
+              <Button onPress={() => this.formValidation()}>
+                <ButtonText> Update </ButtonText>
+              </Button>
+            </ButtonContainer>
+          </Container>
         </ScrollView>
       );
     }

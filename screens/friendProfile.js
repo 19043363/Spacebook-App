@@ -3,22 +3,19 @@ import { View, ScrollView, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import {
-  Title,
-  Subtitle,
   BodyText,
-  InputTextBox,
-  ErrorText,
-  InputPostTextBox,
-  PostTextBox,
-  LoadingView,
-  ProfilePhoto,
-  ProfileContainer,
-  IconButton,
   Button,
-  ButtonText,
   ButtonContainer,
-  RowContainer,
+  ButtonText,
+  Container,
+  IconButton,
+  InputPostTextBox,
+  LoadingView,
   PostInteractionButtonContainer,
+  PostTextBox,
+  ProfileContainer,
+  ProfilePhoto,
+  RowContainer,
 } from "../styles/styles";
 
 class FriendProfileScreen extends Component {
@@ -59,7 +56,7 @@ class FriendProfileScreen extends Component {
 
     this.setState({
       loggedInUsersId: id,
-    })
+    });
 
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id, {
       method: "get",
@@ -288,13 +285,14 @@ class FriendProfileScreen extends Component {
       });
   };
 
-
-
   removePost = async (post_id) => {
     const token = await AsyncStorage.getItem("@session_token");
 
     return fetch(
-      "http://localhost:3333/api/1.0.0/user/" + this.state.userId + "/post/" + post_id,
+      "http://localhost:3333/api/1.0.0/user/" +
+        this.state.userId +
+        "/post/" +
+        post_id,
       {
         method: "delete",
         headers: {
@@ -352,118 +350,117 @@ class FriendProfileScreen extends Component {
     } else {
       return (
         <ScrollView>
-          <ProfileContainer>
-            <ProfilePhoto
-              source={{
-                uri: this.state.userPhoto,
-              }}
+          <Container>
+            <ProfileContainer>
+              <ProfilePhoto
+                source={{
+                  uri: this.state.userPhoto,
+                }}
+              />
+              <BodyText>
+                {this.state.firstName} {this.state.lastName} {"\n"}
+                {this.state.email} {"\n"}
+                Friends: {this.state.friendCount}
+              </BodyText>
+            </ProfileContainer>
+
+            <ButtonContainer>
+              <Button onPress={() => nav.navigate("Friends", { user_id })}>
+                <ButtonText> Friends </ButtonText>
+              </Button>
+            </ButtonContainer>
+
+            <InputPostTextBox
+              placeholder="Post on your friend's wall!"
+              multiline={true}
+              onChangeText={(text) => this.setState({ text })}
+              value={this.state.text}
             />
-            <BodyText>
-              {this.state.firstName} {this.state.lastName} {"\n"}
-              {this.state.email} {"\n"}
-              Friends: {this.state.friendCount}
-            </BodyText>
-          </ProfileContainer>
 
-          <ButtonContainer>
-            <Button onPress={() => nav.navigate("Friends", { user_id })}>
-              <ButtonText> Friends </ButtonText>
-            </Button>
-          </ButtonContainer>
+            <ButtonContainer>
+              <Button onPress={() => this.addPost()}>
+                <ButtonText> Post </ButtonText>
+              </Button>
+            </ButtonContainer>
 
-          <InputPostTextBox
-            placeholder="Post on your friend's wall!"
-            multiline={true}
-            onChangeText={(text) => this.setState({ text })}
-            value={this.state.text}
-          />
+            <FlatList
+              data={this.state.postData}
+              renderItem={({ item }) => (
+                <View>
+                  <PostTextBox>{item.text} </PostTextBox>
 
-          <ButtonContainer>
-            <Button onPress={() => this.addPost()}>
-              <ButtonText> Post </ButtonText>
-            </Button>
-          </ButtonContainer>
+                  <RowContainer>
+                    <BodyText>
+                      {item.author.first_name} {item.author.last_name} {"\n"}
+                      {item.numLikes} Likes{" "}
+                    </BodyText>
 
-          <FlatList
-            data={this.state.postData}
-            renderItem={({ item }) => (
-              <View>
-                <PostTextBox>{item.text} </PostTextBox>
+                    {item.author.user_id == this.state.loggedInUsersId ? (
+                      <PostInteractionButtonContainer>
+                        <IconButton
+                          onPress={() => this.removePost(item.post_id)}
+                        >
+                          <View>
+                            <Ionicons
+                              name={"trash-bin"}
+                              size={buttonSize}
+                              color={"black"}
+                            />
+                          </View>
+                        </IconButton>
 
-                <RowContainer>
-                  <BodyText>
-                    {item.author.first_name} {item.author.last_name}{" "}
-                    {"\n"}
-                    {item.numLikes} Likes{" "}
-                  </BodyText>
+                        <IconButton
+                          onPress={() =>
+                            nav.navigate("Edit Post", {
+                              post_id: item.post_id,
+                              user_id: this.state.userId,
+                            })
+                          }
+                        >
+                          <View>
+                            <Ionicons
+                              name={"create-outline"}
+                              size={buttonSize}
+                              color={"black"}
+                            />
+                          </View>
+                        </IconButton>
+                      </PostInteractionButtonContainer>
+                    ) : (
+                      <PostInteractionButtonContainer>
+                        <IconButton
+                          onPress={() => this.likeFriendPost(item.post_id)}
+                        >
+                          <View>
+                            <Ionicons
+                              name={"heart"}
+                              size={buttonSize}
+                              color={"firebrick"}
+                            />
+                          </View>
+                        </IconButton>
 
-                  {item.author.user_id == this.state.loggedInUsersId ? (
-                    <PostInteractionButtonContainer>
-                    <IconButton onPress={() => this.removePost(item.post_id)}>
-                      <View>
-                        <Ionicons
-                          name={"trash-bin"}
-                          size={buttonSize}
-                          color={"black"}
-                        />
-                      </View>
-                    </IconButton>
-
-                    <IconButton
-                      onPress={() =>
-                        nav.navigate("Edit Post", { post_id: item.post_id,
-                        user_id: this.state.userId })
-                      }
-                    >
-                      <View>
-                        <Ionicons
-                          name={"create-outline"}
-                          size={buttonSize}
-                          color={"black"}
-                        />
-                      </View>
-                    </IconButton>
-                  </PostInteractionButtonContainer>
-                  ) : (
-                    <PostInteractionButtonContainer>
-                      <IconButton
-                        onPress={() => this.likeFriendPost(item.post_id)}
-                      >
-                        <View>
-                          <Ionicons
-                            name={"heart"}
-                            size={buttonSize}
-                            color={"firebrick"}
-                          />
-                        </View>
-                      </IconButton>
-
-                      <IconButton
-                        onPress={() =>
-                          this.removeLikeFromFriendPost(item.post_id)
-                        }
-                      >
-                        <View>
-                          <Ionicons
-                            name={"heart-dislike"}
-                            size={buttonSize}
-                            color={"black"}
-                          />
-                        </View>
-                      </IconButton>
-                    </PostInteractionButtonContainer>
-                  )}
-                </RowContainer>
-              </View>
-            )}
-            keyExtractor={(item, index) => item.post_id.toString()}
-          />
-
-          <ButtonContainer>
-            <Button onPress={() => nav.navigate("Friends")}>
-              <ButtonText> Go back to Friends </ButtonText>
-            </Button>
-          </ButtonContainer>
+                        <IconButton
+                          onPress={() =>
+                            this.removeLikeFromFriendPost(item.post_id)
+                          }
+                        >
+                          <View>
+                            <Ionicons
+                              name={"heart-dislike"}
+                              size={buttonSize}
+                              color={"black"}
+                            />
+                          </View>
+                        </IconButton>
+                      </PostInteractionButtonContainer>
+                    )}
+                  </RowContainer>
+                </View>
+              )}
+              keyExtractor={(item, index) => item.post_id.toString()}
+            />
+          </Container>
         </ScrollView>
       );
     }
