@@ -1,7 +1,10 @@
+// Importing react native components and icons
 import React, { Component } from "react";
 import { View, ScrollView, FlatList } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+// Importing styles
 import {
   BodyText,
   Button,
@@ -22,6 +25,7 @@ class FriendProfileScreen extends Component {
   constructor(props) {
     super(props);
 
+    // Set states for friend's info
     this.state = {
       isLoading: true,
       postData: [],
@@ -35,29 +39,38 @@ class FriendProfileScreen extends Component {
     };
   }
 
+  // Check if user is logged in and is called after the page is rendered
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener("focus", () => {
       this.checkLoggedIn();
     });
 
+    // Calls functions to get friend's data, profile photo and list of posts
     this.getFriendData();
     this.getUserProfilePhoto();
     this.getFriendPostData();
   }
 
+  // Executes code when component unmounts
   componentWillUnmount() {
     this.unsubscribe();
   }
 
+  // Get friend's data function
   getFriendData = async () => {
+    // Gets token and user id from async storage
     const token = await AsyncStorage.getItem("@session_token");
     const id = await AsyncStorage.getItem("user_id");
+
+    // Gets friend's id from route params
     const { user_id } = this.props.route.params;
 
+    // Set logged in user's id
     this.setState({
       loggedInUsersId: id,
     });
 
+    // Get friend's data from API server
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id, {
       method: "get",
       headers: {
@@ -66,20 +79,30 @@ class FriendProfileScreen extends Component {
       },
     })
       .then((response) => {
+        // Status 200 successfully got friend's info
         if (response.status === 200) {
           return response.json();
+          
+          // Status 401 throws unauthorised access and navigate to login page
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
           throw "Unauthorized";
+
+          // Status 404 throws not found
         } else if (response.status === 404) {
           throw "Not found";
+
+          // Status 500 throws server error
         } else if (response.status === 500) {
           throw "Server error";
+
+          // Throws 'something went wrong' for other errors
         } else {
           throw "Something went wrong";
         }
       })
       .then((responseJson) => {
+        // Set states for friend's data and loading state
         this.setState({
           isLoading: false,
           userId: responseJson.user_id,
@@ -89,15 +112,20 @@ class FriendProfileScreen extends Component {
           friendCount: responseJson.friend_count,
         });
       })
+
+      // Displays what error occured in the console
       .catch((error) => {
         console.log(error);
       });
   };
 
+  // Get friend's profile photo function
   getUserProfilePhoto = async () => {
+    // Gets auth token from async storage
     const token = await AsyncStorage.getItem("@session_token");
     const { user_id } = this.props.route.params;
 
+    // Gets friend's profile photo
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/photo", {
       method: "get",
       headers: {
@@ -105,25 +133,59 @@ class FriendProfileScreen extends Component {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => {
-        return res.blob();
+      .then((response) => {
+        // Status 200 successfully got friend's profile photo
+        if (response.status === 200) {
+          return response.blob();
+
+          // Status 400 throws bad request
+        } else if (response.status === 400) {
+          throw "Bad request";
+
+          // Status 401 throws unauthorised access and navigate to login page
+        } else if (response.status === 401) {
+          this.props.navigation.navigate("Login");
+          throw "Unauthorized";
+
+          // Status 404 throws not found
+        } else if (response.status === 404) {
+          throw "Not found";
+
+          // Status 500 throws server error
+        } else if (response.status === 500) {
+          throw "Server error";
+
+          // Throws 'something went wrong' for other errors
+        } else {
+          throw "Something went wrong";
+        }
       })
-      .then((resBlob) => {
-        let data = URL.createObjectURL(resBlob);
+      .then((responseBlob) => {
+        // Create data variable for image
+        let data = URL.createObjectURL(responseBlob);
+
+        // Set user's photo and loading screen to false
         this.setState({
           userPhoto: data,
           isLoading: false,
         });
       })
+
+      // Displays what error occured in the console
       .catch((error) => {
         console.log(error);
       });
   };
 
+  // Get friend's post data function
   getFriendPostData = async () => {
+    // Gets auth token from async storage
     const token = await AsyncStorage.getItem("@session_token");
+
+    // Gets friend's id from route params
     const { user_id } = this.props.route.params;
 
+    // Get user's post info
     return fetch("http://localhost:3333/api/1.0.0/user/" + user_id + "/post", {
       method: "get",
       headers: {
@@ -132,32 +194,48 @@ class FriendProfileScreen extends Component {
       },
     })
       .then((response) => {
+        // Status 200 successfully got list of friend's posts
         if (response.status === 200) {
           return response.json();
+
+          // Status 401 throws unauthorised access and navigate to login page
         } else if (response.status === 401) {
           this.props.navigation.navigate("Login");
           throw "Unauthorized";
+
+          // Status 403 throws can only view posts of yourself or your friends
         } else if (response.status === 403) {
           throw "Can only view the posts of yourself or your friends";
+
+          // Status 404 throws not found
         } else if (response.status === 404) {
           throw "Not found";
+
+          // Status 500 throws server error
         } else if (response.status === 500) {
           throw "Server error";
+
+          // Throws 'something went wrong' for other errors
         } else {
           throw "Something went wrong";
         }
       })
+
       .then((responseJson) => {
+        // Set state for list of post data and loading screen state to false
         this.setState({
           isLoading: false,
           postData: responseJson,
         });
       })
+
+      // Displays what error occured in the console
       .catch((error) => {
         console.log(error);
       });
   };
 
+  // 
   likeFriendPost = async (post_id) => {
     const token = await AsyncStorage.getItem("@session_token");
     const { user_id } = this.props.route.params;

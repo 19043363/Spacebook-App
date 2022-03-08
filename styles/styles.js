@@ -64,9 +64,9 @@ export const PostTextBox = styled.Text `
 
 export const LoadingView = styled.View `
   flex: 1;
-  flexDirection: "column";
-  justifyContent: "center";
-  alignItems: "center";
+  flexDirection: column;
+  justifyContent: center;
+  alignItems: center;
 `;
 
 export const ProfileContainer = styled.View `

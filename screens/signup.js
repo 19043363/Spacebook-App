@@ -19,7 +19,7 @@ class SignupScreen extends Component {
   constructor(props) {
     super(props);
 
-    // Setting states for user info and validations (true or false)
+    // Setting default states for user info and validations (true or false)
     this.state = {
       first_name: "",
       last_name: "",
@@ -32,14 +32,17 @@ class SignupScreen extends Component {
     };
   }
 
-  // Posting user's signup info to the API and handle errors
+  // Signing up function
   signup = () => {
+    // Posting user's signup info to the API server and handle errors
     return (
       fetch("http://localhost:3333/api/1.0.0/user", {
         method: "post",
         headers: {
           "Content-Type": "application/json",
         },
+
+        // Convert user's info states to JSON string
         body: JSON.stringify(this.state),
       })
         .then((response) => {
@@ -50,7 +53,8 @@ class SignupScreen extends Component {
 
             /* Status 400 checks for bad requests
              * Server checks for valid email and password greater than 5 characters
-             * Set invalid email or password to true if invalid
+             * Set state invalid email or password to true if invalid
+             * Throws failed validation
              */
           } else if (response.status === 400) {
             this.setState({
@@ -62,11 +66,12 @@ class SignupScreen extends Component {
           } else if (response.status === 500) {
             throw "Server error";
 
-            // Throws 'something went wrong' for unknown error
+            // Throws 'something went wrong' for other errors
           } else {
             throw "Something went wrong";
           }
         })
+
         // Displays what error occured in the console
         .catch((error) => {
           console.log(error);
@@ -115,13 +120,11 @@ class SignupScreen extends Component {
     // Navigation command efficiency
     const nav = this.props.navigation;
     return (
-
-      /* Set a scroll view so page contents don't overflow off 
+      /* Set a scroll view so page contents don't overflow off
        * Set a container so page contents aren't on the edge of the page
        */
       <ScrollView>
         <Container>
-
           {/* Headers for page */}
           <Title>Sign up</Title>
           <Subtitle>Welcome to Spacebook!</Subtitle>
@@ -186,7 +189,6 @@ class SignupScreen extends Component {
               <ButtonText> Return to Login Page </ButtonText>
             </Button>
           </ButtonContainer>
-
         </Container>
       </ScrollView>
     );
