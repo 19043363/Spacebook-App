@@ -247,7 +247,7 @@ class EditProfileScreen extends Component {
 
   // Check if user has been logged in
   checkLoggedIn = async () => {
-    // Gets token from async storage
+    // Gets auth token from async storage
     const value = await AsyncStorage.getItem("@session_token");
 
     // If the auth token is empty, navigate to login screen

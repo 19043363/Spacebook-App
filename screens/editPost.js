@@ -19,7 +19,7 @@ class EditProfileScreen extends Component {
   constructor(props) {
     super(props);
 
-    // Set default user id, original post text and new post text
+    // Set default user id, original post text, new post text and loading states
     this.state = {
       isLoading: true,
       userId: "",
@@ -95,6 +95,8 @@ class EditProfileScreen extends Component {
           text: responseJson.text,
         });
       })
+
+      // Displays what error occured in the console
       .catch((error) => {
         console.log(error);
       });
@@ -205,6 +207,9 @@ class EditProfileScreen extends Component {
       // Else render page
     } else {
       return (
+        /* Set a scroll view so page contents don't overflow off
+         * Set a container so page contents aren't on the edge of the page
+         */
         <ScrollView>
           <Container>
             {/* Headers for page */}
