@@ -534,7 +534,7 @@ class FriendProfileScreen extends Component {
           <Container>
             {/* Profile horizontal container */}
             <ProfileContainer>
-              
+
               {/* Display user's profile photo */}
               <ProfilePhoto
                 source={{
@@ -603,7 +603,7 @@ class FriendProfileScreen extends Component {
                           </View>
                         </IconButton>
 
-                        {/* Delete button with edit icon */}
+                        {/* Edit post button with edit post icon */}
                         <IconButton
                           onPress={() =>
                             nav.navigate("Edit Post", {
